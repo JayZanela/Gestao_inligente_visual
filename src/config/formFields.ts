@@ -10,6 +10,7 @@ export interface FieldConfig {
   min?: number;
   max?: number;
   defaultValue?: string | number;
+  isModal?: boolean
 }
 
 // Campos para o formulário de cadastro de produtos
@@ -94,7 +95,8 @@ export const entradaFormFields: FieldConfig[] = [
     type: 'select',
     placeholder: 'Selecione o produto',
     required: true,
-    options: [], // Será preenchido dinamicamente
+    options: [],
+    isModal: true, // Será preenchido dinamicamente
   },
   {
     id: 'motivo',

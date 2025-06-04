@@ -47,12 +47,21 @@ export interface SaidaEstoque {
   }
 }
 
+export interface EnderecoUnico {
+  enderecoParam: string;
+}
+
+
+export interface pesquisaParam {
+  colunasParam: string[],
+  termoParam: string
+} 
 // Funções para comunicação com a API
 export const api = {
   // Produtos
   inserirProdutoNovo: async (produto: ProdutoNovo) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/estoque/inserirProdutoNovo`, {
+      const response = await fetch(`/api/estoque/inserirProdutoNovo`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -76,7 +85,7 @@ export const api = {
   // Movimentações
   executarEntrada: async (entrada: EntradaEstoque) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/estoque/executar_entrada`, {
+      const response = await fetch(`/api/estoque/executar_entrada`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +108,7 @@ export const api = {
   
   executarTransferencia: async (transferencia: TransferenciaEstoque) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/estoque/executar_transferencia`, {
+      const response = await fetch(`/api/estoque/executar_transferencia`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +131,7 @@ export const api = {
   
   executarSaida: async (saida: SaidaEstoque) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/estoque/executar_saida`, {
+      const response = await fetch(`/api/estoque/executar_saida`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,6 +148,59 @@ export const api = {
       return data;
     } catch (error) {
       console.error('Erro ao executar saída:', error);
+      throw error;
+    }
+  },
+
+    buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
+    try {
+      const response = await fetch(`/api/estoque/executar_busca`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+        function: 'busca_endereco_unico',
+        param: enderecoUnico,
+      }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao inserir produto');
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Erro ao inserir produto:', error);
+      throw error;
+    }
+  },
+
+
+      buscarProdutosLike: async (pesquisaParam: pesquisaParam) => {
+    try {
+      const response = await fetch(`/api/estoque/executar_busca`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+        function: 'busca_produto_like',
+        param: pesquisaParam,
+      }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao inserir produto');
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Erro ao inserir produto:', error);
       throw error;
     }
   },

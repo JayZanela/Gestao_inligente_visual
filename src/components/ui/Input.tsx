@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface InputProps {
   id: string;
   label?: string;
@@ -13,6 +11,7 @@ interface InputProps {
   min?: number;
   max?: number;
   className?: string;
+  autoFocus?: boolean; // ✅ adicionado aqui
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -28,6 +27,7 @@ export const Input: React.FC<InputProps> = ({
   min,
   max,
   className = '',
+  autoFocus = false, // ✅ adicionado aqui
 }) => {
   return (
     <div className="w-full">
@@ -47,6 +47,7 @@ export const Input: React.FC<InputProps> = ({
         disabled={disabled}
         min={min}
         max={max}
+        autoFocus={autoFocus} // ✅ repassado aqui
         className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary ${
           error ? 'border-red-500' : ''
         } ${disabled ? 'bg-gray-100 text-gray-500' : ''} ${className}`}
@@ -55,5 +56,3 @@ export const Input: React.FC<InputProps> = ({
     </div>
   );
 };
-
-export default Input;
