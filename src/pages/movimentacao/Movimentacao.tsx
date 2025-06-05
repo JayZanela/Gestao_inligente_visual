@@ -5,6 +5,7 @@ import { ArrowDownCircle, ArrowRightCircle, ArrowUpCircle } from 'lucide-react';
 import EntradaForm from './EntradaForm';
 import TransferenciaForm from './TransferenciaForm';
 import SaidaForm from './SaidaForm';
+import MovimentosForm from './movimentosForm';
 import { api } from '../../lib/api';
 
 type MovimentoTipo = 'entrada' | 'transferencia' | 'saida' | ''| 'todos';
@@ -102,12 +103,19 @@ return
   }
 };
   return (
+
+    
+
     <div className="container mx-auto">
+
+
+
       <h1 className="text-2xl font-bold mb-6">Movimentos de Estoque</h1>
 
       <div className="bg-gray rounded-lg shadow-md p-6 mb-8 text-center">
 
             <div className="mb-6">
+                    <MovimentosForm />
           <h1 className="text-lg font-bold mb-4 ">Bipar Endereço</h1>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-grow">
