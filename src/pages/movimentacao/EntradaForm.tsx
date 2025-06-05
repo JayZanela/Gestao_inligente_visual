@@ -12,6 +12,12 @@ interface EntradaFormProps {
   produtosOptions: { label: string; value: string }[];
 }
 
+interface ProdutoOption {
+  label: string;
+  value: string;
+  [key: string]:any; // se quiser permitir extras
+}
+
 export const EntradaForm: React.FC<EntradaFormProps> = ({
   enderecoPreenchido,
   produtosOptions
@@ -32,7 +38,7 @@ export const EntradaForm: React.FC<EntradaFormProps> = ({
   const [modalProduto, setModalProduto] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [produtoSelecionado, setProdutoSelecionado] = useState<any | null>(null);
+  const [produtoSelecionado, setProdutoSelecionado] = useState<ProdutoOption | null>(null);
   const [fields, setFields] = useState<FieldConfig[]>([]);
 
   // Preenche os campos com opções quando produtosOptions mudar
@@ -59,17 +65,35 @@ export const EntradaForm: React.FC<EntradaFormProps> = ({
   }, [enderecoPreenchido]);
 
   // Preenche produto_id quando usuário seleciona via modal
-  useEffect(() => {
-    if (produtoSelecionado) {
-      setFormData(prev => ({
-        ...prev,
-        param: {
-          ...prev.param,
-          produto_id: produtoSelecionado.id
-        }
-      }));
-    }
-  }, [produtoSelecionado]);
+useEffect(() => {
+  if (produtoSelecionado) {
+    const novaOpcao = {
+      label: `${produtoSelecionado.nome} - ${produtoSelecionado.descricao || ''}`,
+      value: String(produtoSelecionado.id)
+    };
+
+    const novosCampos = entradaFormFields.map(field =>
+      field.id === 'produto_id'
+        ? {
+            ...field,
+            options: [novaOpcao, ...(field.options || [])]
+          }
+        : field
+    );
+
+    setFields(novosCampos);
+
+    setFormData(prev => ({
+      ...prev,
+      param: {
+        ...prev.param,
+        produto_id: produtoSelecionado.id
+      }
+    }));
+  }
+}, [produtoSelecionado]);
+
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -121,18 +145,23 @@ export const EntradaForm: React.FC<EntradaFormProps> = ({
     setLoading(true);
     try {
       const result = await api.executarEntrada(formData);
-      setSuccessMessage(`Entrada registrada com sucesso! ID: ${result.movimento?.id || 'N/A'}`);
+      setSuccessMessage(`${result.mensagem}` || `Entrada registrada com sucesso!`);
       setFormData(prev => ({
         ...prev,
         param: {
           ...prev.param,
+          produto_id: 0,
           quantidade: 0,
           motivo: '',
           observacoes: ''
         }
       }));
-    } catch (error: any) {
-      setErrorMessage(error.message || 'Erro ao registrar entrada.');
+    } catch (error) {
+  if (error instanceof Error) {
+    setErrorMessage(error.message);
+  } else {
+    setErrorMessage('Erro desconhecido ao registrar entrada.');
+  }
     } finally {
       setLoading(false);
     }
@@ -169,7 +198,7 @@ export const EntradaForm: React.FC<EntradaFormProps> = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {modalProduto && (
         <Modal
           isOpen={modalProduto}
@@ -187,13 +216,13 @@ export const EntradaForm: React.FC<EntradaFormProps> = ({
         <div className="bg-red-100 text-red-700 px-4 py-2 rounded">{errorMessage}</div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="gap-6  max-w-[77%] mx-auto">
         {fields.map(field => (
           <div key={field.id} className={field.type === 'textarea' ? 'md:col-span-2' : ''}>
             {renderField(field)}
             {field.isModal && (
               <a
-                className="mt-2 block text-sm text-primary hover:underline cursor-pointer"
+                className="mt-1 mb-4 block text-sm text-primary hover:underline cursor-pointer"
                 onClick={() => setModalProduto(true)}
               >
                 Pesquisar produto

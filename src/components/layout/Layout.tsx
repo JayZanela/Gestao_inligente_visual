@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { Menu } from 'lucide-react';
+import { Menu, ChevronRight, } from 'lucide-react';
 
 export const Layout: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 568);
-  const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,8 +29,10 @@ export const Layout: React.FC = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className={`${isMobile ? 'fixed inset-0 z-40' : 'w-64'} ${sidebarOpen ? 'block' : 'hidden'}`}>
-        <Sidebar isMobile={isMobile} isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <div className={`${isMobile ? 'fixed inset-0 z-40' : 'w-64'} ${sidebarOpen ? 'block' : 'max-w-[3%]'}`}>
+
+        {sidebarOpen ? <Sidebar isMobile={isMobile} isOpen={sidebarOpen} toggleSidebar={toggleSidebar} /> : ( <button className="h-12 w-9 flex items-center justify-center bg-gray-800 text-white shadow-none border-none focus:outline-none"><ChevronRight  size={24} onClick={() => setSidebarOpen(true)}/></button> )}
+        
       </div>
 
       {/* Overlay para mobile */}

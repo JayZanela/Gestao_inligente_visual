@@ -60,12 +60,13 @@ const [produtosPesquisa, setProdutosPesquisa] = useState<any[]>([]);
 
 
   return (
-    <div className="fixed inset-0 z-40 flex items-start justify-center bg-black bg-opacity-70">
+<div className="fixed inset-0 z-40 flex items-start justify-center bg-black bg-opacity-70 overflow-y-auto">
+
     
-      <div className="bg-white mt-10  rounded-lg shadow-lg p-4 w-full max-w-3xl max-h-[80vh] overflow-y-auto">
+      <div className="text-start bg-white mt-10  rounded-lg shadow-lg p-4 w-full max-w-3xl max-w-[100vh] overflow-y-auto">
          <a
           
-          className="pb-4 hover:underline text-primary cursor-pointer"
+          className="pb-4 hover:underline text-green-900 cursor-pointer"
           onClick={onClose}
         >
           X
@@ -76,7 +77,7 @@ const [produtosPesquisa, setProdutosPesquisa] = useState<any[]>([]);
     key={opcao.nome}
     onClick={() => toggleOpcaoPesquisa(opcao.nome)}
     className={`m-1 px-3 py-1 rounded border ${
-      opcao.ativo ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+      opcao.ativo ? 'bg-green-900 text-white' : 'bg-gray-200 text-black'
     }`}
   >
     {opcao.nome}
@@ -93,9 +94,6 @@ const [produtosPesquisa, setProdutosPesquisa] = useState<any[]>([]);
               className="text-lg"
             />
           </div>
-          <Button variant="primary">
-            Confirmar
-          </Button>
         </div>
         <div>
         {erroPesquisa && (

@@ -1,7 +1,7 @@
 // API client para comunicação com o backend
 
 // URL base da API
-const API_BASE_URL = 'http://localhost:3000/api';
+
 
 // Interfaces para os tipos de dados
 export interface ProdutoNovo {
@@ -48,7 +48,7 @@ export interface SaidaEstoque {
 }
 
 export interface EnderecoUnico {
-  enderecoParam: string;
+  enderecoParam: string | undefined;
 }
 
 
@@ -85,7 +85,7 @@ export const api = {
   // Movimentações
   executarEntrada: async (entrada: EntradaEstoque) => {
     try {
-      const response = await fetch(`/api/estoque/executar_entrada`, {
+      const response = await fetch(`/api/estoque/executar_Entrada`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -164,16 +164,23 @@ export const api = {
         param: enderecoUnico,
       }),
       });
-      
+      console.log(response)
+      if (response.status === 415) {
+        return {status: 415, error: 'Endereço não existente'}
+
+      }
+
+
+      if (!response.ok) {
+        throw new Error('Erro ao inserir produto');
+      }
       const data = await response.json();
       
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao inserir produto');
-      }
+
       
       return data;
     } catch (error) {
-      console.error('Erro ao inserir produto:', error);
+      console.log(error);
       throw error;
     }
   },

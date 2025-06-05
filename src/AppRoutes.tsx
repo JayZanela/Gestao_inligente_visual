@@ -4,7 +4,7 @@ import Layout from './components/layout/Layout';
 import Login from './pages/Login';
 import Estoque from './pages/Estoque';
 import Produtos from './pages/produtos/Produtos';
-import Movimentos from './pages/movimentos/Movimentos';
+import Movimentos from './pages/movimentacao/Movimentacao';
 import ProdutoCadastroForm from './pages/produtos/ProdutoCadastroForm';
 
 // Páginas em desenvolvimento (placeholders)
@@ -21,7 +21,7 @@ const Pedidos = () => (
   <div className="container mx-auto">
     <h1 className="text-2xl font-bold mb-6">Pedidos</h1>
     <div className="bg-white rounded-lg shadow-md p-6">
-      <p className="text-gray-600">Funcionalidade em desenvolvimento.</p>
+      <p className="text-gray-600">Funcionalidade em desenvolvimento!</p>
     </div>
   </div>
 );
@@ -62,7 +62,7 @@ export const AppRoutes: React.FC = () => {
           <Route index element={<Estoque />} />
           <Route path="produtos" element={<Produtos />} />
           <Route path="produtos/cadastro" element={<ProdutoCadastroForm />} />
-          <Route path="movimentos" element={<Movimentos />} />
+          <Route path="movimentacao" element={<Movimentos />} />
           <Route path="enderecos" element={<Enderecos />} />
         </Route>
         

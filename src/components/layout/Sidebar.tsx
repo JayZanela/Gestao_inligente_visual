@@ -6,9 +6,9 @@ import {
   ShoppingCart, 
   Calendar, 
   ChevronDown, 
-  ChevronRight,
-  Menu,
-  X
+  X,
+    ChevronRight,
+  ChevronLeft,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -57,13 +57,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen, toggleSideba
   return (
     <div className={`bg-gray-800 text-white ${isMobile ? 'fixed inset-0 z-50' : 'min-h-screen'} transition-all duration-300`}>
       <div className="flex items-center justify-between p-4 border-b border-gray-700">
-        <h1 className="text-xl font-bold">Estoque Inteligente</h1>
-        {isMobile && (
-          <button onClick={toggleSidebar} className="text-white">
-            <X size={24} />
-          </button>
-        )}
-      </div>
+  
+  <div className="flex items-center gap-2">
+    <h1 className="text-xl font-bold">Estoque Inteligente</h1>
+    <button onClick={toggleSidebar} className="text-white focus:outline-none">
+      {isOpen && <ChevronLeft size={20} />}
+    </button>
+  </div>
+
+  {isMobile && (
+    <button onClick={toggleSidebar} className="text-white">
+      <X size={24} />
+    </button>
+  )}
+</div>
       
       <nav className="p-4">
         <ul className="space-y-2">

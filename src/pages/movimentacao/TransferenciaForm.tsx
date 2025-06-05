@@ -8,9 +8,16 @@ import { api, TransferenciaEstoque } from '../../lib/api';
 
 interface TransferenciaFormProps {
   enderecoOrigem: string;
+  produtosOptions: { label: string; value: string }[];
 }
 
-export const TransferenciaForm: React.FC<TransferenciaFormProps> = ({ enderecoOrigem }) => {
+interface ProdutoOption {
+  label: string;
+  value: string;
+  [key: string]:any; // se quiser permitir extras
+}
+
+export const TransferenciaForm: React.FC<TransferenciaFormProps> = ({ enderecoOrigem, produtosOptions }) => {
   const [formData, setFormData] = useState<TransferenciaEstoque>({
     param: {
       endereco_de: '',
@@ -26,8 +33,21 @@ export const TransferenciaForm: React.FC<TransferenciaFormProps> = ({ enderecoOr
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [produtoSelecionado, setProdutoSelecionado] = useState<ProdutoOption | null>(null);
+  const [fields, setFields] = useState<FieldConfig[]>([]);
 
-  // Atualiza o endereço de origem quando o endereço bipado mudar
+
+   useEffect(() => {
+      const novosCampos = transferenciaFormFields.map(field =>
+        field.id === 'produto_id'
+          ? { ...field, options: produtosOptions }
+          : field
+      );
+      setFields(novosCampos);
+    }, [produtosOptions]);
+
+
+    // Atualiza o endereço de origem quando o endereço bipado mudar
   useEffect(() => {
     if (enderecoOrigem) {
       setFormData(prev => ({
@@ -39,6 +59,35 @@ export const TransferenciaForm: React.FC<TransferenciaFormProps> = ({ enderecoOr
       }));
     }
   }, [enderecoOrigem]);
+
+
+  useEffect(() => {
+    if (produtoSelecionado) {
+      const novaOpcao = {
+        label: `${produtoSelecionado.nome} - ${produtoSelecionado.descricao || ''}`,
+        value: String(produtoSelecionado.id)
+      };
+  
+      const novosCampos = transferenciaFormFields.map(field =>
+        field.id === 'produto_id'
+          ? {
+              ...field,
+              options: [novaOpcao, ...(field.options || [])]
+            }
+          : field
+      );
+  
+      setFields(novosCampos);
+  
+      setFormData(prev => ({
+        ...prev,
+        param: {
+          ...prev.param,
+          produto_id: produtoSelecionado.id
+        }
+      }));
+    }
+  }, [produtoSelecionado]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -71,7 +120,7 @@ export const TransferenciaForm: React.FC<TransferenciaFormProps> = ({ enderecoOr
     const newErrors: { [key: string]: string } = {};
     let isValid = true;
 
-    transferenciaFormFields.forEach(field => {
+    fields.forEach(field => {
       const value = formData.param[field.id as keyof typeof formData.param];
       
       if (field.required && (value === '' || value === 0)) {
@@ -176,8 +225,8 @@ export const TransferenciaForm: React.FC<TransferenciaFormProps> = ({ enderecoOr
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {transferenciaFormFields.map(field => (
+      <div className="gap-6  max-w-[77%] mx-auto">
+        {fields.map(field => (
           <div key={field.id} className={field.type === 'textarea' ? 'md:col-span-2' : ''}>
             {renderField(field)}
           </div>
