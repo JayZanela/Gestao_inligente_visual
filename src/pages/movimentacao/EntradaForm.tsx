@@ -242,3 +242,4 @@ useEffect(() => {
 };
 
 export default EntradaForm;
+ 

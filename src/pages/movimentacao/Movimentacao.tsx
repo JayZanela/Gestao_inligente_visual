@@ -5,7 +5,7 @@ import { ArrowDownCircle, ArrowRightCircle, ArrowUpCircle } from 'lucide-react';
 import EntradaForm from './EntradaForm';
 import TransferenciaForm from './TransferenciaForm';
 import SaidaForm from './SaidaForm';
-import MovimentosForm from './movimentosForm';
+import {InputNumero, InputSelect} from './movimentosForm';
 import { api } from '../../lib/api';
 
 type MovimentoTipo = 'entrada' | 'transferencia' | 'saida' | ''| 'todos';
@@ -106,7 +106,7 @@ return
 
     
 
-    <div className="container mx-auto">
+    <div className="container">
 
 
 
@@ -115,7 +115,13 @@ return
       <div className="bg-gray rounded-lg shadow-md p-6 mb-8 text-center">
 
             <div className="mb-6">
-                    <MovimentosForm />
+                    <InputNumero valorInicial={4} title='Quantidade'/>
+                    <InputSelect options={[
+  { label: 'Selecione Alguma Opção', value:''},
+  { label: 'Venda', value: 'venda' },
+  { label: 'Compra', value: 'compra' },
+  { label: 'Inventário', value: 'inventario' }
+]} title='Motivos'/>
           <h1 className="text-lg font-bold mb-4 ">Bipar Endereço</h1>
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-grow">
