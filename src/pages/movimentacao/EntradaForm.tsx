@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Input } from '../../components/ui/Input';
-import { Select } from '../../components/ui/Select';
-import { TextArea } from '../../components/ui/TextArea';
+
 import { Button } from '../../components/ui/Button';
-import { entradaFormFields, FieldConfig } from '../../config/formFields';
+
 import { api, EntradaEstoque } from '../../lib/api';
+import {InputNumero, InputSelect, InputTexto} from '../../components/layout/FieldsForm';
 import Modal from './modalProduto';
 
 interface EntradaFormProps {
   enderecoPreenchido: string;
   produtosOptions: { label: string; value: string }[];
+  motivosOptions: {label: string; value:string}[];
 }
 
 interface ProdutoOption {
@@ -20,142 +20,109 @@ interface ProdutoOption {
 
 export const EntradaForm: React.FC<EntradaFormProps> = ({
   enderecoPreenchido,
-  produtosOptions
+  produtosOptions,
+  motivosOptions
 }) => {
-  const [formData, setFormData] = useState<EntradaEstoque>({
-    param: {
-      endereco: '',
-      quantidade: 0,
-      responsavel_id: 1,
-      motivo: '',
-      observacoes: '',
-      produto_id: 0
-    }
-  });
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+
+
+
   const [loading, setLoading] = useState(false);
   const [modalProduto, setModalProduto] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [produtoSelecionado, setProdutoSelecionado] = useState<ProdutoOption | null>(null);
-  const [fields, setFields] = useState<FieldConfig[]>([]);
+  const [ quantidade,setQuantidade] = useState(0);
+  const [produtoId, setProdutoId] = useState('');
+  const [motivo, setMotivo] = useState('');
+  const [observacoes, setObservacoes] = useState('');
+  const [listaProdutos, setListaProdutos] = useState(produtosOptions);
 
   // Preenche os campos com opções quando produtosOptions mudar
-  useEffect(() => {
-    const novosCampos = entradaFormFields.map(field =>
-      field.id === 'produto_id'
-        ? { ...field, options: produtosOptions }
-        : field
-    );
-    setFields(novosCampos);
-  }, [produtosOptions]);
 
+  motivosOptions = [
+      { value: 'Compra', label: 'Compra' },
+      { value: 'Devolução', label: 'Devolução' },
+      { value: 'Inventário', label: 'Ajuste de Inventário' },
+      { value: 'Venda', label: 'Produção' },
+
+  ];
   // Preenche endereço quando vier do pai
   useEffect(() => {
-    if (enderecoPreenchido) {
-      setFormData(prev => ({
-        ...prev,
-        param: {
-          ...prev.param,
-          endereco: enderecoPreenchido
-        }
-      }));
-    }
-  }, [enderecoPreenchido]);
-
+  setListaProdutos(produtosOptions);
+}, [produtosOptions]);
   // Preenche produto_id quando usuário seleciona via modal
 useEffect(() => {
   if (produtoSelecionado) {
-    const novaOpcao = {
+    const novaOption = {
       label: `${produtoSelecionado.nome} - ${produtoSelecionado.descricao || ''}`,
-      value: String(produtoSelecionado.id)
+      value: String(produtoSelecionado.id),
     };
 
-    const novosCampos = entradaFormFields.map(field =>
-      field.id === 'produto_id'
-        ? {
-            ...field,
-            options: [novaOpcao, ...(field.options || [])]
-          }
-        : field
-    );
+    setListaProdutos((prev) => {
+      const jaExiste = prev.find((p) => p.value === novaOption.value);
+      return jaExiste ? prev : [novaOption, ...prev];
+    });
 
-    setFields(novosCampos);
-
-    setFormData(prev => ({
-      ...prev,
-      param: {
-        ...prev.param,
-        produto_id: produtoSelecionado.id
-      }
-    }));
+    setProdutoId(novaOption.value);
   }
 }, [produtoSelecionado]);
 
 
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
+const  validateForm = ():boolean => {
+  let isValid = true;
 
-    setFormData(prev => ({
-      ...prev,
-      param: {
-        ...prev.param,
-        [name]: name === 'quantidade' || name === 'produto_id'
-          ? value === '' ? 0 : Number(value)
-          : value
-      }
-    }));
+  console.log(produtoId);
+  
+  console.log(quantidade);
+  
+  console.log(motivo);
+  if (!produtoId || produtoId === '') {
+    isValid = false;
+  }
 
-    setErrors(prev => ({ ...prev, [name]: '' }));
-    setSuccessMessage('');
-    setErrorMessage('');
-  };
+  if (!quantidade || quantidade <= 0) {
+    isValid = false;
+  }
 
-  const validateForm = (): boolean => {
-    const newErrors: { [key: string]: string } = {};
-    let isValid = true;
+  if (!motivo || motivo === '') {
+    isValid = false;
+  }
 
-    fields.forEach(field => {
-      const value = formData.param[field.id as keyof typeof formData.param];
-      if (field.required && (value === '' || value === 0)) {
-        newErrors[field.id] = `${field.label} é obrigatório.`;
-        isValid = false;
-      }
-      if (field.type === 'number' && field.min !== undefined && Number(value) < field.min) {
-        newErrors[field.id] = `${field.label} deve ser maior ou igual a ${field.min}.`;
-        isValid = false;
-      }
-    });
+  return isValid;
+};
 
-    setErrors(newErrors);
-    return isValid;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSuccessMessage('');
     setErrorMessage('');
 
-    if (!validateForm()) return;
+    if (!validateForm()) {
+       
+      console.log('ERROR VALIDADE');
+      setErrorMessage('Favor preencher os campos obrigatórios (Marcados com *)');
+      return
+    }
+    const formData: EntradaEstoque = {
+  param: {
+    endereco: enderecoPreenchido, // vem da prop
+    quantidade,                   // do useState
+    responsavel_id: 1,            // fixo por enquanto
+    motivo,
+    observacoes,
+    produto_id: Number(produtoId), // porque pode vir como string do select
+  }
+};
 
     setLoading(true);
     try {
       const result = await api.executarEntrada(formData);
-      setSuccessMessage(`${result.mensagem}` || `Entrada registrada com sucesso!`);
-      setFormData(prev => ({
-        ...prev,
-        param: {
-          ...prev.param,
-          produto_id: 0,
-          quantidade: 0,
-          motivo: '',
-          observacoes: ''
-        }
-      }));
+      console.log(result);
+      setSuccessMessage(`Entrada registrada com sucesso!`);
+
     } catch (error) {
   if (error instanceof Error) {
     setErrorMessage(error.message);
@@ -167,7 +134,7 @@ useEffect(() => {
     }
   };
 
-  const renderField = (field: FieldConfig) => {
+  /*const renderField = (field: FieldConfig) => {
     if (field.id === 'endereco' && enderecoPreenchido) return null;
 
     const value = formData.param[field.id as keyof typeof formData.param];
@@ -196,9 +163,9 @@ useEffect(() => {
         return null;
     }
   };
-
+*/
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form  className="space-y-6" onSubmit={handleSubmit}>
       {modalProduto && (
         <Modal
           isOpen={modalProduto}
@@ -217,19 +184,20 @@ useEffect(() => {
       )}
 
       <div className="gap-6  max-w-[77%] mx-auto">
-        {fields.map(field => (
-          <div key={field.id} className={field.type === 'textarea' ? 'md:col-span-2' : ''}>
-            {renderField(field)}
-            {field.isModal && (
-              <a
+      <InputSelect options={[{label:'Selecione um Produto', value: ''}, ...listaProdutos]} title='Produto *'  onChange={(valor) => setProdutoId(valor)}/>
+                      <a
                 className="mt-1 mb-4 block text-sm text-primary hover:underline cursor-pointer"
                 onClick={() => setModalProduto(true)}
               >
                 Pesquisar produto
               </a>
-            )}
-          </div>
-        ))}
+      <InputNumero valorInicial={quantidade} title='Quantidade *' onChange={(valor) => setQuantidade(valor)}/>
+
+      <InputSelect options={[{label:'Selecione um Motivo', value: ''}, ...motivosOptions]} title='Motivo *' onChange={(valor) => setMotivo(valor)}/>
+
+      <InputTexto title='Observações' onChange={(valor) => setObservacoes(valor)}/>
+
+
       </div>
 
       <div className="flex justify-end pt-4">

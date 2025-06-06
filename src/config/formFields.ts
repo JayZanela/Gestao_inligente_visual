@@ -103,7 +103,7 @@ export const entradaFormFields: FieldConfig[] = [
       { value: 'devolucao', label: 'Devolução' },
       { value: 'ajuste', label: 'Ajuste de Inventário' },
       { value: 'producao', label: 'Produção' },
-    ],
+    ], 
   },
   {
     id: 'observacoes',

@@ -85,7 +85,7 @@ export const api = {
   // Movimentações
   executarEntrada: async (entrada: EntradaEstoque) => {
     try {
-      const response = await fetch(`/api/estoque/executar_Entrada`, {
+      const response = await fetch(`/api/estoque/entrada_estoque`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -108,7 +108,7 @@ export const api = {
   
   executarTransferencia: async (transferencia: TransferenciaEstoque) => {
     try {
-      const response = await fetch(`/api/estoque/executar_transferencia`, {
+      const response = await fetch(`/api/estoque/transferencia_estoque`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
