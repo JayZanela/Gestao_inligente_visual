@@ -93,11 +93,11 @@ const validateEnrecos = ():boolean => {
     const formData: TransferenciaEstoque = {
           param: {
       endereco_de: enderecoOrigem,
-      endereco_para: '',
-      quantidade: 0,
+      endereco_para: enderecoPara,
+      quantidade: quantidade,
       responsavel_id: 1, // Valor padrão para teste
-      motivo: '',
-      observacoes: '',
+      motivo: motivo,
+      observacoes: observacoes,
       produto_id: Number(produtoId)
     }
     }
