@@ -150,7 +150,7 @@ const validateEnrecos = ():boolean => {
             </div>
 
 
-      <div className="flex justify-end pt-4">
+      <div className="flex justify-center pt-4">
         <Button type="submit" variant="primary" disabled={loading}>
           {loading ? 'Processando...' : 'Registrar Transferência'}
         </Button>
