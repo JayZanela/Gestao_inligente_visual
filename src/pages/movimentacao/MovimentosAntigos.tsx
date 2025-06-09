@@ -26,12 +26,8 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({endereco
       const [aberto, setAberto] = useState(false);
       const [listaMovimentos, setListaMovimentos] = useState<Movimento[]>([]);
       const [loadingMovimentos, setloadingMovimentos ] = useState(true)
+      const [listaFiltradaMovimentos, setlistaFiltradaMovimentos] = useState(listaMovimentos);
 
-      const cards = [
-  { id: 1, titulo: 'Card 1', descricao: 'Descrição do card 1' },
-  { id: 2, titulo: 'Card 2', descricao: 'Descrição do card 2' },
-  { id: 3, titulo: 'Card 3', descricao: 'Descrição do card 3' },
-];
 
     useEffect(() => {
         console.log('effecct lista');
@@ -42,10 +38,23 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({endereco
 
     }, [enderecoBusca])
 
+    useEffect(() => {
+      if (enderecoBusca === '') return setlistaFiltradaMovimentos(listaMovimentos);
+      const listaFiltrada = [];
+      listaMovimentos.map((movimento) => {
+        if ( movimento.endereco_de === enderecoBusca || movimento.endereco_para === enderecoBusca) {
+          listaFiltrada.push(movimento)
+        }
+      return setlistaFiltradaMovimentos(listaFiltrada)
+      })
+
+    })
+
 
 
     const requestBuscaDetalhes =  async () => {
     try {
+      setloadingMovimentos(true);
     const runBuscadetalhes = await api.buscarMovimentosLike( {colunasParam: [],
   termoParam: ''} );
 
@@ -75,7 +84,7 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({endereco
 
     return (
     <div className="dropdown-container max-w-[90%]">
-      {loadingMovimentos ? (<div> teste </div>) :       <button onClick={() => setAberto(!aberto)} className="dropdown-button font-bold ">
+      {loadingMovimentos ? (<div className='font-bold'> Carregando.. </div>) :       <button onClick={() => setAberto(!aberto)} className="dropdown-button font-bold ">
         {aberto ? 'Fechar Historico ▲' : 'Ultimas Movimentações ▼'}
       </button>}
 
@@ -86,9 +95,12 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({endereco
 
 
 
+        {listaFiltradaMovimentos.length === 0 && (
+          <h3>Sem Movimentos parao Endereço Buscado.</h3>
 
+        )}
 
-          {listaMovimentos.map((card) => (
+          {listaFiltradaMovimentos.map((card) => (
             <div key={card.id} className={'card text-start'}>
 
 
@@ -110,15 +122,13 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({endereco
                 </div>
         </div>
 
-                    <div>
-                <div className={card.endereco_de? 'font-bold' : 'font-bold text-red-300' }>
- DE: {card.endereco_de ? card.endereco_de : 'Não Encontrado.'}
+            <div className='ml-4'>
+                <div className={`text-gray-600 ${!card.endereco_de ? 'text-red-300' : (card.endereco_de === enderecoBusca && enderecoBusca !== '') ? 'font-bold': ''}`}>
+                  DE: {card.endereco_de ? card.endereco_de : 'Não Encontrado.'}
                 </div>
-                <div className={card.endereco_para? 'font-bold' : 'font-bold text-red-300' }>
-                                    PARA: {card.endereco_para? card.endereco_para : 'Não Encontrado.   '}
+                <div className={`text-gray-600 ${!card.endereco_para ? 'text-red-300' : (card.endereco_para === enderecoBusca && enderecoBusca !== '') ? 'font-bold': ''}`}>
+                  PARA: {card.endereco_para? card.endereco_para : 'Não Encontrado.   '}
                 </div>
-
-
             </div>    
 
                 </div>

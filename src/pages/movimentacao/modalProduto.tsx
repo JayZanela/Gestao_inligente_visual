@@ -65,7 +65,7 @@ const [produtosPesquisa, setProdutosPesquisa] = useState<any[]>([]);
       <div className="text-start bg-white mt-10  rounded-lg shadow-lg p-4 w-full max-w-3xl max-w-[100vh] overflow-y-auto">
          <a
           
-          className="pb-4 hover:underline text-green-900 cursor-pointer"
+          className="font-bold pb-4 hover:underline text-green-900 cursor-pointer"
           onClick={onClose}
         >
           X
