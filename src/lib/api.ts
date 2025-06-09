@@ -1,7 +1,7 @@
 // API client para comunicação com o backend
 
 // URL base da API
-const urlAPI = "https://estoque-inteligente-pearl.vercel.app/";
+const urlAPI = "https://estoque-inteligente-pearl.vercel.app";
 
 // Interfaces para os tipos de dados
 export interface ProdutoNovo {
