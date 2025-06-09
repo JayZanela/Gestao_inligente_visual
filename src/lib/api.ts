@@ -63,6 +63,9 @@ export interface movimentacaoLikeParam {
 
 }
 
+export interface buscaOcupacoesdoProdutoParam {
+  produtoId: number,
+}
 
 
 // Funções para comunicação com a API
@@ -247,6 +250,41 @@ buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
       throw error;
     }
   },
+
+  buscaOcupacoesDoProduto: async (produtoParam: buscaOcupacoesdoProdutoParam) => {
+    try {
+      const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          function: 'busca_ocupacoes_produto', 
+          param: produtoParam,
+        }),
+      })
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao buscar Moviments');
+      }
+      
+      return data;
+
+    }
+    catch (error) {
+      console.error('Erro ao Buscar Ocupaçoes do Produto:', error);
+      throw error;
+
+    }
+
+
+
+
+    return null
+
+  }
 };
 
 

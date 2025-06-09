@@ -45,6 +45,7 @@ export const CadastroProduto: React.FC = () => {
     //---------------------
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         setInputValor(e.target.value)
+        if (e.target.value.length < 3) return null 
         pesquisaTexto(e.target.value)
     };
 
@@ -65,6 +66,15 @@ export const CadastroProduto: React.FC = () => {
             }
     } 
     
+    //--------------------
+    const buscarOcupacoesDoProduto = async (produto : number) => {
+        const resultOcups = await api.buscaOcupacoesDoProduto({produtoId: Number(produto)});
+
+        
+
+
+    }
+
     //--------------------  
     const selecionarProduto = async (produto : unknown) => {
         setProdutoSelecionado(produto);
@@ -119,7 +129,7 @@ export const CadastroProduto: React.FC = () => {
                             <Input 
                             className="ml-1"
                             id='' 
-                            placeholder="Digite Detalhes do Produto" 
+                            placeholder="Digite Detalhes do Produto (Min: 3 Digitos)" 
                             value={inputvalor} 
                             onChange={(e) => {
                             handleChange(e);                                
@@ -130,7 +140,8 @@ export const CadastroProduto: React.FC = () => {
             </div>
             <div>        
                 <div className="p-2 mx-auto">
-                <Card title="" description="" >
+                    {inputvalor ? (
+                        <Card title="" description="" >
                     <Table>
                             <TableHeader>
                                 <TableHead  className="text-center"></TableHead>
@@ -142,7 +153,7 @@ export const CadastroProduto: React.FC = () => {
                                 <TableHead>Codigo Barras Importação</TableHead>
                             </TableHeader>
                             <TableBody>
-                                                {produtosPesquisados.map(produto => (
+                            {produtosPesquisados.length > 0 ? (produtosPesquisados.map(produto => (
 
                             <TableRow 
                             onClick={() => {
@@ -162,12 +173,21 @@ export const CadastroProduto: React.FC = () => {
 
                         
                     
-                    ))}
+                    ))) : (
+                        <div className="text-center">
+                            <h2>Zero Resultados</h2>
+                        </div>
+                        
+                    )}
                             </TableBody>
 
                     </Table>
 
-                </Card>                                                  
+                </Card>
+                    ) : (
+                        <h2 className="font-semibold text-center">Digite para Apresentar os resultados</h2>
+                    )}
+                                                                  
                 </div>
                
             </div>
@@ -179,6 +199,8 @@ export const CadastroProduto: React.FC = () => {
             <div>
                 
                 <div className="container p-3">
+
+
                 </div>
 
             </div>
