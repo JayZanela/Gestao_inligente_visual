@@ -130,7 +130,7 @@ export const CadastroProduto: React.FC = () => {
             </div>
             <div>        
                 <div className="p-2 mx-auto">
-                <Card>
+                <Card title="" description="" >
                     <Table>
                             <TableHeader>
                                 <TableHead  className="text-center"></TableHead>
