@@ -20,9 +20,9 @@ export const InputTexto: React.FC<{ onChange?: (valor: string) => void;   title?
             <div className="flex mx-auto max-w-[50%] items-center space-x-2">
 
       <TextArea
-        type="textarea"
+      id=''
         value={valor}
-        onChange={handleChange}
+        onChange={() => (handleChange)}
         className="text-center border border-gray-300 rounded"
 
                         rows={2}
@@ -61,6 +61,7 @@ export const InputNumero: React.FC<{
       <div className="flex">
         <div className="flex mx-auto max-w-[50%] items-center space-x-2">
           <Input
+            id=''
             type="number"
             value={valorInicial}
             onChange={handleInputChange}

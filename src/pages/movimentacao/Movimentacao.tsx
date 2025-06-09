@@ -218,15 +218,18 @@ return
             <EntradaForm
               enderecoPreenchido={endereco}
               produtosOptions={produtosOptions}
+                motivosOptions={produtosOptions}
             />
           )}
           {tipoMovimento === 'transferencia' && (
             <TransferenciaForm 
             enderecoOrigem={endereco}     
-            produtosOptions={produtosOptions}/>
+            produtosOptions={produtosOptions}
+            motivosOptions={produtosOptions}
+            />
           )}
           {tipoMovimento === 'saida' && (
-            <SaidaForm enderecoOrigem={endereco} produtosOptions={produtosOptions} />
+            <SaidaForm enderecoOrigem={endereco} produtosOptions={produtosOptions} motivosOptions={produtosOptions} />
           )}
         </div>
         <div>

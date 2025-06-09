@@ -23,6 +23,7 @@ export const InputNumero: React.FC<{ valorInicial: number; onChange?: (valor: nu
 
        <button onClick={() => setValor(valor > 0 ? valor - 1 : valor)} className="px-6 bg-gray-200 rounded">−</button>
       <Input
+      id=''
         type="number"
         value={valor}
         onChange={handleChange}

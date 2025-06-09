@@ -12,7 +12,7 @@ interface SaidaFormProps {
 }
 
 
-export const SaidaForm: React.FC<saidaFormProps> = ({ enderecoOrigem, produtosOptions, motivosOptions }) => {
+export const SaidaForm: React.FC<SaidaFormProps> = ({ enderecoOrigem, produtosOptions, motivosOptions }) => {
 
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
