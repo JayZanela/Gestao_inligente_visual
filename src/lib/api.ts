@@ -1,7 +1,7 @@
 // API client para comunicação com o backend
 
 // URL base da API
-
+const urlAPI = "https://estoque-inteligente-pearl.vercel.app/";
 
 // Interfaces para os tipos de dados
 export interface ProdutoNovo {
@@ -70,7 +70,7 @@ export const api = {
   // Produtos
   inserirProdutoNovo: async (produto: ProdutoNovo) => {
     try {
-      const response = await fetch(`/api/estoque/inserirProdutoNovo`, {
+      const response = await fetch(`${urlAPI}/api/estoque/inserirProdutoNovo`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ export const api = {
   // Movimentações
   executarEntrada: async (entrada: EntradaEstoque) => {
     try {
-      const response = await fetch(`/api/estoque/entrada_estoque`, {
+      const response = await fetch(`${urlAPI}/api/estoque/entrada_estoque`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ export const api = {
   
   executarTransferencia: async (transferencia: TransferenciaEstoque) => {
     try {
-      const response = await fetch(`/api/estoque/transferencia_estoque`, {
+      const response = await fetch(`${urlAPI}/api/estoque/transferencia_estoque`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ export const api = {
   
   executarSaida: async (saida: SaidaEstoque) => {
     try {
-      const response = await fetch(`/api/estoque/saida_estoque`, {
+      const response = await fetch(`${urlAPI}/api/estoque/saida_estoque`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -165,7 +165,7 @@ buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
   try {
     const isEnderecoVazio = !enderecoUnico || Object.values(enderecoUnico).every(value => !value);
 
-    const response = await fetch(`/api/estoque/executar_busca`, {
+    const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -196,7 +196,7 @@ buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
 
       buscarProdutosLike: async (pesquisaParam: pesquisaParam) => {
     try {
-      const response = await fetch(`/api/estoque/executar_busca`, {
+      const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
 
   buscarMovimentosLike: async (movimentacaoLikeParam: movimentacaoLikeParam) => {
     try {
-      const response = await fetch(`/api/estoque/executar_busca`, {
+      const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
