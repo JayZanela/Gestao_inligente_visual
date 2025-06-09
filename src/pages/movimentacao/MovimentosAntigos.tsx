@@ -38,17 +38,19 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({endereco
 
     }, [enderecoBusca])
 
-    useEffect(() => {
-      if (enderecoBusca === '') return setlistaFiltradaMovimentos(listaMovimentos);
-      const listaFiltrada = [];
-      listaMovimentos.map((movimento) => {
-        if ( movimento.endereco_de === enderecoBusca || movimento.endereco_para === enderecoBusca) {
-          listaFiltrada.push(movimento)
-        }
-      return setlistaFiltradaMovimentos(listaFiltrada)
-      })
+useEffect(() => {
+  if (enderecoBusca === '') {
+    setlistaFiltradaMovimentos(listaMovimentos);
+    return;
+  }
 
-    })
+  const listaFiltrada = listaMovimentos.filter(
+    (movimento) =>
+      movimento.endereco_de === enderecoBusca || movimento.endereco_para === enderecoBusca
+  );
+
+  setlistaFiltradaMovimentos(listaFiltrada);
+}, [enderecoBusca, listaMovimentos]);
 
 
 
@@ -100,7 +102,7 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({endereco
 
         )}
 
-          {listaFiltradaMovimentos.map((card) => (
+          {[...listaFiltradaMovimentos].reverse().map((card) => (
             <div key={card.id} className={'card text-start'}>
 
 
@@ -111,7 +113,7 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({endereco
         {card.tipo === 'Saída' && (<PackageMinus size={35} />)}
         {card.tipo === 'Transferência' && (<ArrowRightLeft size={35} />)}</div>
         <div className='m-3 text-left w-[100px]'>
-            <h3 className='font-bold'> {card.tipo}</h3>
+            <h3 className='font-bold'>{card.tipo}</h3>
         </div>
         <div className='ml-5 w-[40%]'>
             <div>
@@ -122,12 +124,13 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({endereco
                 </div>
         </div>
 
-            <div className='ml-4'>
-                <div className={`text-gray-600 ${!card.endereco_de ? 'text-red-300' : (card.endereco_de === enderecoBusca && enderecoBusca !== '') ? 'font-bold': ''}`}>
-                  DE: {card.endereco_de ? card.endereco_de : 'Não Encontrado.'}
-                </div>
-                <div className={`text-gray-600 ${!card.endereco_para ? 'text-red-300' : (card.endereco_para === enderecoBusca && enderecoBusca !== '') ? 'font-bold': ''}`}>
-                  PARA: {card.endereco_para? card.endereco_para : 'Não Encontrado.   '}
+            <div className='ml-4 text-center w-[40%]'>
+              <div>
+               {card.tipo === 'Entrada' ? 'Entrada para' : (card.tipo === 'Saída' ? 'Saída de' : 'De -> Para' )}
+              </div>
+                <div className={`text-gray-600 font-bold `}>
+
+                  {card.tipo === 'Entrada' ? `${card.endereco_para}` : (card.tipo === 'Saída' ? `${card.endereco_de}` : `${card.endereco_de} --> ${card.endereco_para}`)}
                 </div>
             </div>    
 

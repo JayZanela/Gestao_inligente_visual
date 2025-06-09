@@ -114,7 +114,9 @@ return
 };
   return (
 
-    <div className='max-w-[100%]'>
+    <div className='max-w-[100%] mx-auto'>
+      <h1 className="text-2xl font-bold mb-6">Movimentação</h1>
+    <div className="bg-white rounded-lg shadow-md p-6 mb-8">
 
     <div className="mx-auto text-center container">
 
@@ -243,7 +245,7 @@ return
 
         </div>
       </div>
-
+ </div>
         </div>
   );
 };

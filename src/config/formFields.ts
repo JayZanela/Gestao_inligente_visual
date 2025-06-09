@@ -255,7 +255,7 @@ export const menuConfig: MenuConfig[] = [
       },
     ],
   },
-  {
+  /*{
     id: 'pedidos',
     title: 'Pedidos',
     description: 'Gerenciamento de pedidos de compra e venda',
@@ -282,5 +282,5 @@ export const menuConfig: MenuConfig[] = [
         path: '/agendamentos/consulta',
       },
     ],
-  },
+  }*/
 ];

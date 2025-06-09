@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Search, PlusCircle } from 'lucide-react';
+import ProdutoCadastroForm from './ProdutoCadastroForm'
 
 export const Produtos: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'consulta' | 'cadastro'>('consulta');
 
   return (
-    <div className="container mx-auto">
+    <div className=" mx-auto">
       <h1 className="text-2xl font-bold mb-6">Produtos</h1>
       
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -60,7 +61,7 @@ const ProdutoCadastro: React.FC = () => {
   // Esta parte será implementada em um arquivo separado
   return (
     <div className="bg-gray-50 p-4 rounded-md">
-      <p className="text-center">Formulário de cadastro será carregado aqui.</p>
+      <ProdutoCadastroForm/>
     </div>
   );
 };

@@ -12,7 +12,7 @@ import ProdutoCadastroForm from './pages/produtos/ProdutoCadastroForm';
 
 
 const Pedidos = () => (
-  <div className="container mx-auto">
+  <div className="container max-w-[100%] mx-auto">
     <h1 className="text-2xl font-bold mb-6">Pedidos</h1>
     <div className="bg-white rounded-lg shadow-md p-6">
       <p className="text-gray-600">Funcionalidade em desenvolvimento!</p>
