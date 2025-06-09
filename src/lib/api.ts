@@ -56,6 +56,15 @@ export interface pesquisaParam {
   colunasParam: string[],
   termoParam: string
 } 
+
+export interface movimentacaoLikeParam {
+  colunasParam: string[],
+  termoParam: string
+
+}
+
+
+
 // Funções para comunicação com a API
 export const api = {
   // Produtos
@@ -131,7 +140,7 @@ export const api = {
   
   executarSaida: async (saida: SaidaEstoque) => {
     try {
-      const response = await fetch(`/api/estoque/executar_saida`, {
+      const response = await fetch(`/api/estoque/saida_estoque`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -152,38 +161,37 @@ export const api = {
     }
   },
 
-    buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
-    try {
-      const response = await fetch(`/api/estoque/executar_busca`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-        function: 'busca_endereco_unico',
-        param: enderecoUnico,
-      }),
-      });
-      console.log(response)
-      if (response.status === 415) {
-        return {status: 415, error: 'Endereço não existente'}
+buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
+  try {
+    const isEnderecoVazio = !enderecoUnico || Object.values(enderecoUnico).every(value => !value);
 
-      }
+    const response = await fetch(`/api/estoque/executar_busca`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(
+        isEnderecoVazio
+          ? { function: 'busca_endereco_unico' }
+          : { function: 'busca_endereco_unico', param: enderecoUnico }
+      ),
+    });
 
-
-      if (!response.ok) {
-        throw new Error('Erro ao inserir produto');
-      }
-      const data = await response.json();
-      
-
-      
-      return data;
-    } catch (error) {
-      console.log(error);
-      throw error;
+    if (response.status === 415) {
+      return { status: 415, error: 'Endereço não existente' };
     }
-  },
+
+    if (!response.ok) {
+      throw new Error('Erro ao buscar endereço');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Erro na função buscarEnderecoUnico:', error);
+    throw error;
+  }
+},
 
 
       buscarProdutosLike: async (pesquisaParam: pesquisaParam) => {
@@ -211,4 +219,36 @@ export const api = {
       throw error;
     }
   },
+
+  buscarMovimentosLike: async (movimentacaoLikeParam: movimentacaoLikeParam) => {
+    try {
+      const response = await fetch(`/api/estoque/executar_busca`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify( movimentacaoLikeParam.termoParam === "" ? {
+        function: 'busca_movimentos_like'
+      } : {
+        function: 'busca_movimentos_like',
+        param: movimentacaoLikeParam,
+      } ),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao buscar Moviments');
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Erro ao inserir produto:', error);
+      throw error;
+    }
+  },
 };
+
+
+
+

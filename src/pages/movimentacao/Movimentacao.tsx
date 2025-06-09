@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { ArrowDownCircle, ArrowRightCircle, ArrowUpCircle } from 'lucide-react';
+import { PackagePlus, ArrowRightLeft, PackageMinus } from 'lucide-react';
 import EntradaForm from './EntradaForm';
 import TransferenciaForm from './TransferenciaForm';
+import MovimentosAntigos from './MovimentosAntigos';
 import SaidaForm from './SaidaForm';
 import { api } from '../../lib/api';
 
@@ -113,9 +114,9 @@ return
 };
   return (
 
-    
+    <div className='max-w-[100%]'>
 
-    <div className="text-center container">
+    <div className="mx-auto text-center container">
 
             <div className="mb-6">
           <h1 className="text-lg font-bold mb-4 ">Bipar Endereço</h1>
@@ -168,7 +169,7 @@ return
         className="flex items-center gap-2"
         
       >
-        <ArrowDownCircle size={tipoMovimento === 'entrada' ? 25 : 18} />
+        <PackagePlus size={tipoMovimento === 'entrada' ? 25 : 18} />
         Entrada
       </Button>
           )}
@@ -181,7 +182,7 @@ return
         onClick={() => toggleTipo('transferencia')}
         className="ml-3 mr-3 flex items-center gap-2"
       >
-        <ArrowRightCircle size={tipoMovimento === 'transferencia' ? 25 : 18} />
+        <ArrowRightLeft size={tipoMovimento === 'transferencia' ? 25 : 18} />
         Transferência
       </Button>
 
@@ -195,7 +196,7 @@ return
         onClick={() => toggleTipo('saida')}
         className="flex items-center gap-2"
       >
-        <ArrowUpCircle size={tipoMovimento === 'saida' ? 25 : 18} />
+        <PackageMinus size={tipoMovimento === 'saida' ? 25 : 18} />
         Saída
       </Button>
 
@@ -228,7 +229,19 @@ return
             <SaidaForm enderecoOrigem={endereco} produtosOptions={produtosOptions} />
           )}
         </div>
+        <div>
+         ______________
+        </div>
+                <div>
+
+
+          <MovimentosAntigos enderecoBusca=''/>
+
+
+        </div>
       </div>
+
+        </div>
   );
 };
 

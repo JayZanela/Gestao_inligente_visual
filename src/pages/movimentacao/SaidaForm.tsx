@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../../components/ui/Button';
 import {InputNumero, InputSelect, InputTexto, InputEndereco} from '../../components/layout/FieldsForm';
 
-import { api, TransferenciaEstoque } from '../../lib/api';
+import { api, SaidaEstoque } from '../../lib/api';
 
 interface SaidaFormProps {
   enderecoOrigem: string;
@@ -59,9 +59,7 @@ export const SaidaForm: React.FC<saidaFormProps> = ({ enderecoOrigem, produtosOp
     isValid = false;
   }
 
-    if (!enderecoPara || enderecoPara === '') {
-    isValid = false;
-  }
+
 
 
   return isValid;
@@ -83,28 +81,28 @@ const validateEnrecos = ():boolean => {
       return;
     }
 
-    const formData: TransferenciaEstoque = {
+    const formData: SaidaEstoque = {
           param: {
       endereco_de: enderecoOrigem,
-      endereco_para: '',
-      quantidade: 0,
+
+      quantidade: quantidade,
       responsavel_id: 1, // Valor padrão para teste
-      motivo: '',
-      observacoes: '',
-      produto_id: Number(produtoId)
+      motivo: motivo,
+      observacoes: observacoes || '',
+      produto_id: Number(produtoId) 
     }
     }
 
 
     setLoading(true);
     try {
-      const result = await api.executarTransferencia(formData);
-      setSuccessMessage(`Transferência registrada com sucesso! Movimentação ID: ${result.movimento?.id || 'N/A'}`);
+      const result = await api.executarSaida(formData);
+      setSuccessMessage(`Saída registrada com sucesso! Movimentação ID: ${result.movimento?.id || 'N/A'}`);
       
       // Limpa apenas alguns campos, mantendo endereços e produto
     } catch (error: any) {
-      setErrorMessage(error.message || 'Erro ao registrar transferência. Tente novamente.');
-      console.error('Erro na transferência:', error);
+      setErrorMessage(error.message || 'Erro ao registrar Saída. Tente novamente.');
+      console.error('Erro na Saída:', error);
     } finally {
       setLoading(false);
     }
@@ -113,7 +111,7 @@ const validateEnrecos = ():boolean => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h2 className="text-xl font-semibold mb-4">Transferência de Produto</h2>
+      <h2 className="text-xl font-semibold mb-4">Saída de Produto</h2>
       
       {successMessage && (
         <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">

@@ -88,7 +88,7 @@ const validateEnrecos = ():boolean => {
     if (!validateForm()) {
       setErrorMessage('Favor preencher os campos obrigatórios (Marcados com *)');
       return;
-    }
+    } 
 
     const formData: TransferenciaEstoque = {
           param: {

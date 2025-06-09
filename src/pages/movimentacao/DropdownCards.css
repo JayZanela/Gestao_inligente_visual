@@ -1,0 +1,29 @@
+.dropdown-container {
+  width: 800px;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.dropdown-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  margin-top: 10px;
+}
+
+.card {
+  background-color: #f4f4f4;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: left;
+  transition: 0.3s;
+}
+
+.card:hover {
+  background-color: #eaeaea;
+}
