@@ -130,3 +130,4 @@ const [produtosPesquisa, setProdutosPesquisa] = useState<any[]>([]);
 };
 
 export default Modal;
+ 

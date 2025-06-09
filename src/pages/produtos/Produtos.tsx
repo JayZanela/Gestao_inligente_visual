@@ -3,6 +3,7 @@ import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Search, PlusCircle } from 'lucide-react';
 import ProdutoCadastroForm from './ProdutoCadastroForm'
+import CadastroProduto from './CadastroProduto'
 
 export const Produtos: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'consulta' | 'cadastro'>('consulta');
@@ -61,6 +62,7 @@ const ProdutoCadastro: React.FC = () => {
   // Esta parte será implementada em um arquivo separado
   return (
     <div className="bg-gray-50 p-4 rounded-md">
+      <CadastroProduto />
       <ProdutoCadastroForm/>
     </div>
   );
