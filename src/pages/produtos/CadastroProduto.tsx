@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
-
+import { Button }from '../../components/ui/Button'
 
 type tiposCadastro = 'Desconhecido'| 'Novo' | 'Existente';
 
@@ -19,6 +19,7 @@ export const CadastroProduto: React.FC = () => {
 
     const [inputvalor, setInputValor] = useState('');
     const [produtosPesquisados, setProdutosPesquisados] = useState([]);
+    const [produtoSelecionado, setProdutoSelecionado] = useState({});
 
     const [tipoDoCadastro, setTipoDoCadastro] = useState<tiposCadastro>('Desconhecido');
     const [opcoesPesquisa, setOpcoesPesquisa] = useState([
@@ -57,13 +58,32 @@ export const CadastroProduto: React.FC = () => {
                 termoParam: termo});
     
             setProdutosPesquisados(resultProdutos);
+            console.log(resultProdutos)
             } 
         catch (error) {
                 console.log(error)
             }
     } 
     
+    //--------------------  
+    const selecionarProduto = async (produto : unknown) => {
+        setProdutoSelecionado(produto);
+        console.log(produto)
+        setTipoDoCadastro('Existente');
+    } 
 
+    //---------------------
+    const destacarTextoJSX = (texto: string, termo: string) => {
+  if (!termo) return texto;
+
+  const partes = texto.split(new RegExp(`(${termo})`, 'gi'));
+
+  return partes.map((parte, i) =>
+    parte.toLowerCase() === termo.toLowerCase()
+      ? <strong key={i} className="font-bold">{parte}</strong>
+      : (parte.toLowerCase() === 'em branco' ? <p key={i} className="text-neutral-400">{parte}</p> : parte )
+  );
+};
 
 
 
@@ -73,7 +93,10 @@ export const CadastroProduto: React.FC = () => {
 
     return (
         <div>
+
+        {/*Buscar Produto, no caso vou primeiro buscar ele, se existir, sigo com o existente e so executo a entrada dele.*/}    
         {tipoDoCadastro === "Desconhecido" && (
+            <div>
             <div className="container p-3">
                 <div className="max-w-[100%]">
                     <div className="">
@@ -103,14 +126,17 @@ export const CadastroProduto: React.FC = () => {
                             }}></Input>
                         </div>
 
-                </div>    
-                <div className="p-2">
+                </div>
+            </div>
+            <div>        
+                <div className="p-2 mx-auto">
                 <Card>
                     <Table>
                             <TableHeader>
+                                <TableHead  className="text-center"></TableHead>
                                 <TableHead>Nome</TableHead>
-                                <TableHead>SKU</TableHead>
                                 <TableHead>Descrição</TableHead>
+                                <TableHead>SKU</TableHead>
                                 <TableHead>Embalagem</TableHead>
                                 <TableHead>Unidade Medida</TableHead>
                                 <TableHead>Codigo Barras Importação</TableHead>
@@ -118,17 +144,24 @@ export const CadastroProduto: React.FC = () => {
                             <TableBody>
                                                 {produtosPesquisados.map(produto => (
 
-                            <TableRow>
-                                <TableCell> {produto.nome} </TableCell>
-                                <TableCell> {produto.nome} </TableCell>
-                                <TableCell> {produto.nome} </TableCell>
-                                <TableCell> {produto.nome} </TableCell>
-                                                    
+                            <TableRow 
+                            onClick={() => {
+                                selecionarProduto(produto)
+                            }}>
+                                <TableCell> <Button className="font-semibold" variant="link">Selecionar</Button> </TableCell>
+                                <TableCell> {destacarTextoJSX(produto.nome, inputvalor)} </TableCell>
+                                <TableCell> {destacarTextoJSX(produto.descricao, inputvalor)}  </TableCell>
+                                <TableCell> {destacarTextoJSX(produto.sku? produto.sku : 'Em Branco', inputvalor)}  </TableCell>
+                                <TableCell> {destacarTextoJSX(produto.tipo_embalagem, inputvalor)}  </TableCell>
+                                <TableCell> {destacarTextoJSX(produto.unidade_medida, inputvalor)}  </TableCell>
+                                <TableCell> {destacarTextoJSX(produto.codigo_barras? produto.codigo_barras : 'Em Branco', inputvalor)}  </TableCell>
+
                                 </TableRow>
 
 
 
                         
+                    
                     ))}
                             </TableBody>
 
@@ -138,9 +171,30 @@ export const CadastroProduto: React.FC = () => {
                 </div>
                
             </div>
+                    </div>  
+
+        )}
+        {/*Selecionei qual o propduto que eu quieria, basta fazer a entrada*/}
+        {tipoDoCadastro === 'Existente' && (
+            <div>
+                
+                <div className="container p-3">
+                </div>
+
+            </div>
+
+
+
+
+
+
 
 
         )}
+
+
+
+
         </div>
     )
 
