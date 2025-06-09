@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
+import FrameEnderecosNocoDB from './FrameGaleriaEnderecosNocoDB'
+import FrameCalendarioEnderecosNocoDB from './FrameCalendarioEnderecosNocoDB'
+import { Button} from '@/components/ui/Button'
+import {BookImage, CalendarFold }  from 'lucide-react'
+
+
+type opcoesVisualizacoes = ''|'Galeria de Endereços' | 'Historico dos Endereços';
+
 
 
 export const Enderecos: React.FC = () => {
+
+  const [opcaoVisualizada, setOpcaoVisualizada] = useState<opcoesVisualizacoes>('');
   const[loading, setloading] = useState(true);
 
   const handleloading = () => {
@@ -9,37 +19,41 @@ export const Enderecos: React.FC = () => {
 
   }
 
+  
+  const toggleOpcaoVizualizacao = (opcao: opcoesVisualizacoes) => {
+    setOpcaoVisualizada(prev => (prev === opcao ? '' : opcao))
+  }
 
 
 
 
 
     return (
+      <div>
+        <div className='text-center m-4'>
+          <div className='items-center'>
+              <h2 className='font-bold'> Acesse alguma funcionalidade:</h2>
+            
+        <Button variant={opcaoVisualizada === 'Galeria de Endereços' ? 'primary' : 'outline'} onClick={() => (toggleOpcaoVizualizacao('Galeria de Endereços'))} className='ml-3 mr-3 flex items-center'>
+          <BookImage/>
 
-<div style={{ position: 'relative', height: '700px', overflow: 'hidden' }}>
-  <div>
-    <iframe
-      src="https://nocodb.plataforma.app/dashboard/#/nc/gallery/bd752954-69a1-42ee-8f58-cd45431d7a81"
-      width="100%"
-      height="1000px"
-      onLoad={handleloading}
-      loading="lazy"
-      style={{
-        position: 'absolute',
-        top: '-75px', // Ajuste esse valor conforme necessário
-        left: 0,
-        border: 'none',
-      }}
-    ></iframe>
+              Galeria de Endereços
+          </Button>
+                    <Button variant={opcaoVisualizada === 'Historico dos Endereços' ? 'primary' : 'outline'} onClick={() => (toggleOpcaoVizualizacao('Historico dos Endereços'))} className='ml-3 mr-3 flex items-center gap-2'>
+                      <CalendarFold/>
+              Historico dos Endereços
+          </Button>
 
-      {loading && (
+          </div>
+          
+        </div>
+        <div>
+          {opcaoVisualizada=== 'Galeria de Endereços' && ( <FrameEnderecosNocoDB />)}
+          {opcaoVisualizada=== 'Historico dos Endereços' && ( <FrameCalendarioEnderecosNocoDB />)}
+        </div>
 
-        <p className='font-bold text-center'>Carregando Endereços...</p>
+      </div>
 
-
-      )}
-  </div>
-</div>
 
     )
 
