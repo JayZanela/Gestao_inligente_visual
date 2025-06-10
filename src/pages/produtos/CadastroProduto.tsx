@@ -241,6 +241,9 @@ export const CadastroProduto: React.FC = () => {
                         handleChange(e);
                       }}
                     ></Input>
+                    <Button variant="link" onClick={() => setInputValor("")}>
+                      Limpar Busca
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -396,6 +399,17 @@ export const CadastroProduto: React.FC = () => {
             )}
             {!telaEntradaForm && (
               <div>
+                <div
+                  className="justify-items-end"
+                  onClick={() => setenderecosSugestao([])}
+                >
+                  <Button
+                    variant="link"
+                    disabled={enderecosSugestao.length === 0}
+                  >
+                    {"Novo Endereço >"}
+                  </Button>
+                </div>
                 {enderecosSugestao.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                     {enderecosSugestao.map((endereco, index) => (
@@ -421,7 +435,7 @@ export const CadastroProduto: React.FC = () => {
                                 acessarEntradaForm(endereco);
                               }}
                             >
-                              Entrada
+                              Executar Entrada do Produto
                             </Button>
                           </div>
                         </div>
