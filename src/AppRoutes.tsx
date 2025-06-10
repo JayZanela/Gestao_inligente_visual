@@ -7,6 +7,7 @@ import Produtos from './pages/produtos/Produtos';
 import Movimentos from './pages/movimentacao/Movimentacao';
 import Enderecos from './pages/enderecos/Enderecos'
 import ProdutoCadastroForm from './pages/produtos/ProdutoCadastroForm';
+import CadastroProduto from './pages/produtos/CadastroProduto';
 
 // Páginas em desenvolvimento (placeholders)
 
@@ -54,8 +55,11 @@ export const AppRoutes: React.FC = () => {
         
         <Route path="estoque">
           <Route index element={<Estoque />} />
-          <Route path="produtos" element={<Produtos />} />
+          <Route path="produtos">
+            <Route index element={<Produtos />} />
+          </Route>
           <Route path="produtos/cadastro" element={<ProdutoCadastroForm />} />
+          
           <Route path="movimentacao" element={<Movimentos />} />
           <Route path="enderecos" element={<Enderecos />} />
         </Route>

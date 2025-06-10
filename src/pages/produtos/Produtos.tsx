@@ -4,6 +4,7 @@ import { Card } from '../../components/ui/Card';
 import { Search, PlusCircle } from 'lucide-react';
 import ProdutoCadastroForm from './ProdutoCadastroForm'
 import CadastroProduto from './CadastroProduto'
+import { EntradaForm } from '../movimentacao/EntradaForm'
 
 export const Produtos: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'consulta' | 'cadastro'>('consulta');
