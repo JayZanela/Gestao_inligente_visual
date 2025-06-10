@@ -295,47 +295,21 @@ export const CadastroProduto: React.FC = () => {
                                 Selecionar
                               </Button>{" "}
                             </TableCell>
-                            <TableCell>
-                              {" "}
-                              {destacarTextoJSX(produto.nome, inputvalor)}{" "}
-                            </TableCell>
-                            <TableCell>
-                              {" "}
-                              {destacarTextoJSX(
-                                produto.descricao,
-                                inputvalor
-                              )}{" "}
-                            </TableCell>
-                            <TableCell>
-                              {" "}
-                              {destacarTextoJSX(
-                                produto.sku ? produto.sku : "Em Branco",
-                                inputvalor
-                              )}{" "}
-                            </TableCell>
-                            <TableCell>
-                              {" "}
-                              {destacarTextoJSX(
-                                produto.tipo_embalagem,
-                                inputvalor
-                              )}{" "}
-                            </TableCell>
-                            <TableCell>
-                              {" "}
-                              {destacarTextoJSX(
-                                produto.unidade_medida,
-                                inputvalor
-                              )}{" "}
-                            </TableCell>
-                            <TableCell>
-                              {" "}
-                              {destacarTextoJSX(
-                                produto.codigo_barras
-                                  ? produto.codigo_barras
-                                  : "Em Branco",
-                                inputvalor
-                              )}{" "}
-                            </TableCell>
+                            {[
+                              produto.nome,
+                              produto.descricao,
+                              produto.sku,
+                              produto.tipo_embalagem,
+                              produto.unidade_medida,
+                              produto.codigo_barras,
+                            ].map((campo, idx) => (
+                              <TableCell key={idx}>
+                                {destacarTextoJSX(
+                                  campo ?? "Em Branco",
+                                  inputvalor
+                                )}
+                              </TableCell>
+                            ))}
                           </TableRow>
                         ))
                       ) : (
