@@ -17,13 +17,28 @@ import EntradaForm from "../movimentacao/EntradaForm";
 type tiposCadastro = "Desconhecido" | "Novo" | "Existente";
 
 export const CadastroProduto: React.FC = () => {
+  type Endereco = {
+    quantidade: number;
+    posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque: {
+      endereco: string;
+    };
+  };
+
+  type Produto = {
+    nome: string;
+    descricao: string;
+    tipo_embalagem: string;
+    // outros campos se necessário
+  };
+
   const [inputvalor, setInputValor] = useState("");
   const [produtosPesquisados, setProdutosPesquisados] = useState([]);
-  const [produtoSelecionado, setProdutoSelecionado] = useState({});
+  const [produtoSelecionado, setProdutoSelecionado] = useState<Produto>(null);
   const [isprodutoSelecionado, setisprodutoSelecionado] = useState(false);
   const [enderecosSugestao, setenderecosSugestao] = useState<any>([]);
   const [telaEntradaForm, setTelaEntradaForm] = useState(false);
-  const [enderecoSelecionado, setEnderecoSelecionado] = useState("");
+  const [enderecoSelecionado, setEnderecoSelecionado] =
+    useState<Endereco>(null);
 
   const [tipoDoCadastro, setTipoDoCadastro] =
     useState<tiposCadastro>("Desconhecido");
@@ -86,7 +101,7 @@ export const CadastroProduto: React.FC = () => {
   };
 
   //--------------------
-  const selecionarProduto = async (produto: any) => {
+  const selecionarProduto = async (produto: Produto) => {
     setProdutoSelecionado(produto);
     setisprodutoSelecionado(true);
     console.log(produto);
@@ -136,7 +151,7 @@ export const CadastroProduto: React.FC = () => {
   };
 
   //------------------
-  const acessarEntradaForm = (endereco: string) => {
+  const acessarEntradaForm = (endereco: Endereco) => {
     setTelaEntradaForm(true);
     setEnderecoSelecionado(endereco);
   };
@@ -311,7 +326,7 @@ export const CadastroProduto: React.FC = () => {
                 {enderecosSugestao.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                     {enderecosSugestao.map((endereco, index) => (
-                      <Card key={index} title="">
+                      <Card key={index} title="" description="">
                         <div className="flex">
                           <div>
                             <p className="text-3xl font-bold">
