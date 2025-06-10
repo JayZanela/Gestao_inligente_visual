@@ -20,6 +20,9 @@ export const CadastroProduto: React.FC = () => {
     const [inputvalor, setInputValor] = useState('');
     const [produtosPesquisados, setProdutosPesquisados] = useState([]);
     const [produtoSelecionado, setProdutoSelecionado] = useState({});
+    const [isprodutoSelecionado, setisprodutoSelecionado] = useState(false)
+    const [enderecosSugestao, setenderecosSugestao ] = useState<any>([]
+    );
 
     const [tipoDoCadastro, setTipoDoCadastro] = useState<tiposCadastro>('Desconhecido');
     const [opcoesPesquisa, setOpcoesPesquisa] = useState([
@@ -67,19 +70,35 @@ export const CadastroProduto: React.FC = () => {
     } 
     
     //--------------------
-    const buscarOcupacoesDoProduto = async (produto : number) => {
-        const resultOcups = await api.buscaOcupacoesDoProduto({produtoId: Number(produto)});
+    const buscarOcupacoesDoProduto = async (produto : any) => {
+        console.log('cuzans ' + JSON.stringify(produto, null, 2));
 
+        const resultOcups = await api.buscaOcupacoesDoProduto({produtoId: Number(produto.id)});
+
+
+        return resultOcups
         
+
+
 
 
     }
 
     //--------------------  
-    const selecionarProduto = async (produto : unknown) => {
+    const selecionarProduto = async (produto : any) => {
         setProdutoSelecionado(produto);
+        setisprodutoSelecionado(true);
         console.log(produto)
         setTipoDoCadastro('Existente');
+        const padraoRetorno = [];
+        const result = await buscarOcupacoesDoProduto(produto);
+        console.log('CUZANS' +  JSON.stringify(result , null, 2))
+        if (result.length === 0 ) {
+            setenderecosSugestao(padraoRetorno)
+        } else {
+            setenderecosSugestao(result)
+        }
+        
     } 
 
     //---------------------
@@ -95,6 +114,21 @@ export const CadastroProduto: React.FC = () => {
   );
 };
 
+    //------------------
+    const ModalRedirecionar = () => {
+
+        return (
+            <div>
+                <Card title="" description="">
+                    <div className="text-center">
+                        <h2 className="text-4xl font-semibold m-4">Redirecionando...</h2>
+
+                    </div>
+                </Card>
+            </div>
+
+        )
+    }
 
 
 
@@ -102,8 +136,9 @@ export const CadastroProduto: React.FC = () => {
 
 
     return (
-        <div>
-
+        <div className="">
+        
+        
         {/*Buscar Produto, no caso vou primeiro buscar ele, se existir, sigo com o existente e so executo a entrada dele.*/}    
         {tipoDoCadastro === "Desconhecido" && (
             <div>
@@ -140,6 +175,8 @@ export const CadastroProduto: React.FC = () => {
             </div>
             <div>        
                 <div className="p-2 mx-auto">
+                    
+
                     {inputvalor ? (
                         <Card title="" description="" >
                     <Table>
@@ -199,7 +236,30 @@ export const CadastroProduto: React.FC = () => {
             <div>
                 
                 <div className="container p-3">
-
+                {enderecosSugestao.length > 0 ? (
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+    {enderecosSugestao.map((endereco, index) => (
+      <Card key={index} title="">
+        <div className="flex">
+            <div>
+            <p className="text-3xl font-bold">
+          {endereco.posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque.endereco}
+        </p>
+        <p className="font-semibold">
+          Saldo atual: {endereco.quantidade}
+        </p>
+            </div>
+            <div className="flex text-center mx-auto">
+                <Button variant="link" className="border-2">Entrada</Button>
+            </div>
+        </div>
+      </Card>
+    ))}
+  </div>
+        ) : ( isprodutoSelecionado ? (<ModalRedirecionar />) : (null)
+            
+           
+        )}
 
                 </div>
 
