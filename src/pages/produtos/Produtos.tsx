@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../../components/ui/Button";
-import { Card } from "../../components/ui/Card";
 import { Search, PlusCircle } from "lucide-react";
-import ProdutoCadastroForm from "./ProdutoCadastroForm";
 import CadastroProduto from "./CadastroProduto";
 
 export const Produtos: React.FC = () => {

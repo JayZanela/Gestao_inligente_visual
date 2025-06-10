@@ -9,8 +9,8 @@ export const InputTexto: React.FC<{
 }> = ({ onChange, title }) => {
   const [valor, setValor] = useState("");
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const novoValor = String(event.target.value);
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const novoValor = event.target.value;
     setValor(novoValor);
     onChange?.(novoValor);
   };
