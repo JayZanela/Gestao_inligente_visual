@@ -13,6 +13,8 @@ import {
 import { Button } from "../../components/ui/Button";
 
 import EntradaForm from "../movimentacao/EntradaForm";
+import { InputEndereco } from "../../components/layout/FieldsForm";
+import NovoProdutoForm from "./NovoProdutoForm";
 
 type tiposCadastro = "Desconhecido" | "Novo" | "Existente";
 
@@ -36,6 +38,7 @@ export const CadastroProduto: React.FC = () => {
   const [produtoSelecionado, setProdutoSelecionado] = useState<Produto>(null);
   const [isprodutoSelecionado, setisprodutoSelecionado] = useState(false);
   const [enderecosSugestao, setenderecosSugestao] = useState<any>([]);
+  const [enderecoBipado, setEnderecoBipado] = useState(false);
   const [telaEntradaForm, setTelaEntradaForm] = useState(false);
   const [enderecoSelecionado, setEnderecoSelecionado] =
     useState<Endereco>(null);
@@ -138,12 +141,53 @@ export const CadastroProduto: React.FC = () => {
   };
 
   //------------------
-  const ModalRedirecionar = () => {
+  const definirEndereco = (novoEndereco: string) => {
+    setEnderecoSelecionado({
+      quantidade: 0,
+      posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque: {
+        endereco: novoEndereco,
+      },
+    });
+  };
+
+  //-------------------
+  const atualizarEndereco = (novoEndereco: any) => {
+    console.log(novoEndereco);
+    setEnderecoSelecionado({
+      quantidade: 0,
+      posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque: {
+        endereco: novoEndereco,
+      },
+    });
+  };
+
+  //------------------
+  const BipadorEndereco = () => {
     return (
       <div>
         <Card title="" description="">
           <div className="text-center">
-            <h2 className="text-4xl font-semibold m-4">Redirecionando...</h2>
+            <InputEndereco
+              key={
+                enderecoSelecionado
+                  ?.posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
+                  .endereco
+              }
+              title="Bipar Endereço Destino *"
+              onChange={(valor) => atualizarEndereco(valor)}
+              enderecoParam={
+                enderecoSelecionado
+                  ?.posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
+                  ?.endereco
+                  ? enderecoSelecionado
+                      ?.posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
+                      ?.endereco
+                  : ""
+              }
+            />
+            <Button onClick={() => setEnderecoBipado(true)}>
+              Acessar entrada do Produto
+            </Button>
           </div>
         </Card>
       </div>
@@ -152,45 +196,71 @@ export const CadastroProduto: React.FC = () => {
 
   //------------------
   const acessarEntradaForm = (endereco: Endereco) => {
-    setTelaEntradaForm(true);
     setEnderecoSelecionado(endereco);
+    setTelaEntradaForm(true);
   };
 
   return (
     <div className="">
+      {tipoDoCadastro !== "Desconhecido" && (
+        <div onClick={() => setTipoDoCadastro("Desconhecido")}>
+          <Button variant="link">{"< voltar"}</Button>
+        </div>
+      )}
+
       {/*Buscar Produto, no caso vou primeiro buscar ele, se existir, sigo com o existente e so executo a entrada dele.*/}
       {tipoDoCadastro === "Desconhecido" && (
         <div>
-          <div className="container p-3">
-            <div className="max-w-[100%]">
-              <div className="">
-                <h2 className="m-4 text-2xl">
-                  Buscar Produto Existente no Sistema:
-                </h2>
+          <div className=" p-3">
+            <div className="max-w-[100%] grid sm:grid-cols-1 lg:grid-cols-2 ">
+              <div className="items-center text-center">
+                <div className="items-center text-center">
+                  <h2 className="m-4 text-2xl font-semibold">
+                    Buscar Produto Existente no Sistema:
+                  </h2>
+                  <div className="items-center text-center ms-5">
+                    {opcoesPesquisa.map((opcao) => (
+                      <button
+                        key={opcao.nome}
+                        onClick={() => toggleOpcaoPesquisa(opcao.nome)}
+                        className={`m-1 px-2 py-1 rounded border ${
+                          opcao.ativo
+                            ? "bg-green-900 text-white"
+                            : "bg-gray-200 text-black"
+                        }`}
+                      >
+                        {opcao.nome}
+                      </button>
+                    ))}
+                    <Input
+                      className="items-center text-center ml-1"
+                      id=""
+                      placeholder="Digite Detalhes do Produto (Min: 3 Digitos)"
+                      value={inputvalor}
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
+                    ></Input>
+                  </div>
+                </div>
               </div>
-              <div className="ms-5 max-w-[60%]">
-                {opcoesPesquisa.map((opcao) => (
-                  <button
-                    key={opcao.nome}
-                    onClick={() => toggleOpcaoPesquisa(opcao.nome)}
-                    className={`m-1 px-2 py-1 rounded border ${
-                      opcao.ativo
-                        ? "bg-green-900 text-white"
-                        : "bg-gray-200 text-black"
-                    }`}
+              <div className="items-center text-center">
+                <h2 className="m-4 text-2xl font-semibold">
+                  Adicione um Produto Novo:
+                </h2>
+                <h2 className="m-4 text-1xl font-semibold">
+                  Para cadastrar produtos nao existentes do sistema, acesse
+                  abaixo
+                </h2>
+                <div>
+                  <Button
+                    className="bg-green-50 text-green-900 border-green-900"
+                    variant="outline"
+                    onClick={() => setTipoDoCadastro("Novo")}
                   >
-                    {opcao.nome}
-                  </button>
-                ))}
-                <Input
-                  className="ml-1"
-                  id=""
-                  placeholder="Digite Detalhes do Produto (Min: 3 Digitos)"
-                  value={inputvalor}
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
-                ></Input>
+                    Novo Produto
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -274,9 +344,11 @@ export const CadastroProduto: React.FC = () => {
                   </Table>
                 </Card>
               ) : (
-                <h2 className="font-semibold text-center">
-                  Digite para Apresentar os resultados
-                </h2>
+                <div>
+                  <h2 className="font-semibold text-center">
+                    Digite para Apresentar os resultados
+                  </h2>
+                </div>
               )}
             </div>
           </div>
@@ -285,7 +357,7 @@ export const CadastroProduto: React.FC = () => {
       {/*Selecionei qual o propduto que eu quieria, basta fazer a entrada*/}
       {tipoDoCadastro === "Existente" && (
         <div>
-          <div className="container p-3">
+          <div className="mx-auto p-3">
             {telaEntradaForm && (
               <div className="text-center">
                 <div className="m-3 text-1xl font-semibold">
@@ -302,6 +374,7 @@ export const CadastroProduto: React.FC = () => {
                     {produtoSelecionado.tipo_embalagem} (s)
                   </p>
                 </div>
+
                 <EntradaForm
                   enderecoPreenchido={
                     enderecoSelecionado
@@ -356,10 +429,41 @@ export const CadastroProduto: React.FC = () => {
                     ))}
                   </div>
                 ) : isprodutoSelecionado ? (
-                  <ModalRedirecionar />
+                  <div className="text-center">
+                    <BipadorEndereco />
+                  </div>
                 ) : null}
+                {enderecoBipado && (
+                  <div className="text-center">
+                    <EntradaForm
+                      enderecoPreenchido={
+                        enderecoSelecionado
+                          .posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
+                          .endereco
+                      }
+                      produtosOptions={[
+                        {
+                          label:
+                            String(produtoSelecionado.nome) +
+                            " - " +
+                            String(produtoSelecionado.descricao),
+                          value: "1",
+                        },
+                      ]}
+                      motivosOptions={[]}
+                    />
+                  </div>
+                )}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {tipoDoCadastro === "Novo" && (
+        <div>
+          <div className="mx-auto p-3">
+            <NovoProdutoForm />
           </div>
         </div>
       )}

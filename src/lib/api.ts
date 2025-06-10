@@ -9,7 +9,8 @@ export interface ProdutoNovo {
   descricao: string;
   tipo_embalagem: string;
   unidade_medida: string;
-  modelo: string;
+  nome_modelo: string;
+  edicao_modelo: number;
   codigo_barras?: string;
 }
 
