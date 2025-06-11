@@ -222,7 +222,7 @@ export const CadastroProduto: React.FC = () => {
                   <h2 className="m-4 text-2xl font-semibold">
                     Buscar Produto Existente no Sistema:
                   </h2>
-                  <div className="items-center text-center ms-5">
+                  <div className="items-center text-center">
                     {opcoesPesquisa.map((opcao) => (
                       <button
                         key={opcao.nome}
