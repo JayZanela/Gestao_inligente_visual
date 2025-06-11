@@ -17,8 +17,44 @@ interface parametrosAPINovoProduto {
   codigo_barras: string;
 }
 export const NovoProdutoForm: React.FC = () => {
-  let opcoesUnidadeMedida = [];
-  let opcoesTipoEmbalagem = [];
+  // 1) Unidades de Medida (conforme sua CHECK constraint)
+  const opcoesUnidadeMedida = [
+    { label: "Selecione a unidade de medida", value: "0" },
+    { label: "Unidade", value: "UN" },
+    { label: "Caixa", value: "CX" },
+    { label: "Peça", value: "PC" },
+    { label: "Quilograma", value: "KG" },
+    { label: "Grama", value: "G" },
+    { label: "Litro", value: "L" },
+    { label: "Mililitro", value: "ML" },
+    { label: "Metro (comprimento)", value: "M" },
+    { label: "Centímetro", value: "CM" },
+    { label: "Milímetro", value: "MM" },
+    { label: "Metro quadrado", value: "MT" },
+    { label: "Rolo", value: "ROLO" },
+    { label: "Pacote", value: "PCT" },
+    { label: "Maço", value: "MÇ" },
+  ];
+
+  // 2) Tipos de Embalagem (sugestão enxuta — você pode incluir/remover)
+  const opcoesTipoEmbalagem = [
+    { label: "Selecione o tipo de embalagem", value: "0" },
+    { label: "Caixa", value: "CX" },
+    { label: "Pacote", value: "PCT" },
+    { label: "Saco", value: "SAC" },
+    { label: "Rolo", value: "ROLO" },
+    { label: "Envelope", value: "ENV" },
+    { label: "Palete", value: "PLT" },
+  ];
+
+  const opcoesModelosMotos = [
+    { label: "Selecione um modelo", value: "0" },
+    { label: "KAY - V1", value: "KAY|1" },
+    { label: "Kimbo - V1", value: "Kimbo|1" },
+    { label: "Zilla - V1", value: "Zilla|1" },
+    { label: "Juna - V1", value: "Juna|1" },
+    { label: "Mult - V1", value: "Mult|1" },
+  ];
 
   const [isCarregandoTela, setisCarregandoTela] = useState(false);
   const [parametrosNovoProduto, setparametrosNovoProduto] =
@@ -139,23 +175,17 @@ export const NovoProdutoForm: React.FC = () => {
         />
 
         <InputSelect
-          options={[
-            { label: "Selecione algum tipo de Embalagem", value: "0" },
-            ...opcoesTipoEmbalagem,
-          ]}
+          options={[...opcoesTipoEmbalagem]}
           title="Tipo de Embalagem"
           onChange={(v) => handleParamChange("tipo_embalagem", v)}
         />
         <InputSelect
-          options={[
-            { label: "Selecione uma Unidade", value: "" },
-            ...opcoesUnidadeMedida,
-          ]}
+          options={[...opcoesUnidadeMedida]}
           title="Unidade de Medida "
           onChange={(v) => handleParamChange("unidade_medida", v)}
         />
         <InputSelect
-          options={[{ label: "Selecione um Modelo", value: "0|0" }]}
+          options={[...opcoesModelosMotos]}
           title="Modelo (Nome + Edição)"
           onChange={(v) => {
             // v === "Modelo X|1"
