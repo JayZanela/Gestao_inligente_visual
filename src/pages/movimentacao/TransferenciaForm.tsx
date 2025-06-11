@@ -14,6 +14,7 @@ interface TransferenciaFormProps {
   enderecoOrigem: string;
   produtosOptions: { label: string; value: string }[];
   motivosOptions: { label: string; value: string }[];
+  quantidadesOptions: { id: number; quantidade: number }[];
 }
 
 interface ProdutoOption {
@@ -26,6 +27,7 @@ export const TransferenciaForm: React.FC<TransferenciaFormProps> = ({
   enderecoOrigem,
   produtosOptions,
   motivosOptions,
+  quantidadesOptions,
 }) => {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -36,7 +38,9 @@ export const TransferenciaForm: React.FC<TransferenciaFormProps> = ({
   const [motivo, setMotivo] = useState("");
   const [observacoes, setObservacoes] = useState("");
   const [listaProdutos, setListaProdutos] = useState(produtosOptions);
+  const [listaQuantidades, setListaQuantidades] = useState(quantidadesOptions);
   const [enderecoPara, setEnderecoPara] = useState("");
+  const [selectedProductName, setSelectedProductName] = useState(null);
 
   motivosOptions = [
     { value: "Inventário", label: "Ajuste de Inventário" },
@@ -45,7 +49,9 @@ export const TransferenciaForm: React.FC<TransferenciaFormProps> = ({
 
   useEffect(() => {
     setListaProdutos(produtosOptions);
-  }, [produtosOptions]);
+    setListaQuantidades(quantidadesOptions);
+    console.log(`LOG OPTION QQUANTIDADE ${JSON.stringify(quantidadesOptions)}`);
+  }, [produtosOptions, quantidadesOptions]);
 
   const validateForm = (): boolean => {
     let isValid = true;
@@ -145,14 +151,23 @@ export const TransferenciaForm: React.FC<TransferenciaFormProps> = ({
             ...listaProdutos,
           ]}
           title="Produto *"
-          onChange={(valor) => setProdutoId(valor)}
+          onChange={(valor) => {
+            setProdutoId(valor);
+          }}
         />
 
         <InputNumero
           valorInicial={quantidade}
-          title="Quantidade *"
+          title={`Quantidade`}
           onChange={(valor) => setQuantidade(valor)}
         />
+        {produtoId && (
+          <p className="text-sm mb-2">
+            Quantidade disponível:{" "}
+            {listaQuantidades.find((q) => q.id === Number(produtoId))
+              ?.quantidade ?? 0}
+          </p>
+        )}
 
         <InputSelect
           options={[

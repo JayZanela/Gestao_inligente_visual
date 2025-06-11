@@ -13,7 +13,7 @@ interface parametrosAPINovoProduto {
   tipo_embalagem: string;
   unidade_medida: string;
   nome_modelo: string;
-  edicao_modelo: number;
+  edicao_modelo: string;
   codigo_barras: string;
 }
 export const NovoProdutoForm: React.FC = () => {
@@ -64,7 +64,7 @@ export const NovoProdutoForm: React.FC = () => {
       tipo_embalagem: "",
       unidade_medida: "",
       nome_modelo: "",
-      edicao_modelo: 0,
+      edicao_modelo: "",
       codigo_barras: "",
     });
   const [mensagemNovoProduto, setmensagemNovoProduto] = useState({
@@ -112,7 +112,7 @@ export const NovoProdutoForm: React.FC = () => {
         tipo_embalagem: "",
         unidade_medida: "",
         nome_modelo: "",
-        edicao_modelo: 0,
+        edicao_modelo: "",
         codigo_barras: "",
       });
     } catch (error) {
@@ -169,11 +169,6 @@ export const NovoProdutoForm: React.FC = () => {
           title="Nome"
           onChange={(v) => handleParamChange("nome", v)}
         />
-        <InputTexto
-          title="Descrição"
-          onChange={(v) => handleParamChange("descricao", v)}
-        />
-
         <InputSelect
           options={[...opcoesTipoEmbalagem]}
           title="Tipo de Embalagem"
@@ -191,12 +186,16 @@ export const NovoProdutoForm: React.FC = () => {
             // v === "Modelo X|1"
             const [nomeModelo, edicaoStr] = v.split("|");
             handleParamChange("nome_modelo", nomeModelo);
-            handleParamChange("edicao_modelo", Number(edicaoStr));
+            handleParamChange("edicao_modelo", edicaoStr);
           }}
         />
         <InputTexto
           title="Codigo de Barras Importação"
           onChange={(v) => handleParamChange("codigo_barras", v)}
+        />
+        <InputTexto
+          title="Descrição"
+          onChange={(v) => handleParamChange("descricao", v)}
         />
         <div className="pt-4">
           <Button
