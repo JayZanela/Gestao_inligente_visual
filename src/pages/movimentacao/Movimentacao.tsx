@@ -46,6 +46,7 @@ export const Movimentos: React.FC = () => {
 
   const handleEnderecoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEnderecoError("");
+    setTipoMovimento("");
 
     if (e.target.value === "") {
       setEnderecoSucesso("");
