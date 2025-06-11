@@ -338,10 +338,10 @@ export const CadastroProduto: React.FC = () => {
       {/*Selecionei qual o propduto que eu quieria, basta fazer a entrada*/}
       {tipoDoCadastro === "Existente" && (
         <div>
-          <div className="mx-auto p-3">
+          <div className="mx-auto p-1">
             {telaEntradaForm && (
               <div className="text-center">
-                <div className="m-3 text-1xl font-semibold">
+                <div className="m-1 text-1xl font-semibold">
                   <p className="text-2xl">Endereço:</p>
                   <p className="text-3xl">
                     {
@@ -387,7 +387,7 @@ export const CadastroProduto: React.FC = () => {
                   </Button>
                 </div>
                 {enderecosSugestao.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 p-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 sm:gap-4 lg:gap-4 sm:p-5 lg:p-4">
                     {enderecosSugestao.map((endereco, index) => (
                       <Card key={index} title="" description="">
                         <div
@@ -416,7 +416,7 @@ export const CadastroProduto: React.FC = () => {
                                 acessarEntradaForm(endereco);
                               }}
                             >
-                              Executar Entrada do Produto
+                              Entrada do Produto
                             </Button>
                           </div>
                         </div>

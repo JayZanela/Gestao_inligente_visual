@@ -18,7 +18,7 @@ export const InputTexto: React.FC<{
   return (
     <div>
       <div className="mx-auto items-center "> {title && <p>{title}</p>}</div>
-      <div className="flex mx-auto max-w-[50%] items-center space-x-2">
+      <div className="flex mx-auto sm:max-w-[95%] lg:max-w-[55%] items-center space-x-2">
         <TextArea
           id=""
           value={valor}
@@ -54,7 +54,7 @@ export const InputNumero: React.FC<{
       <div className="mx-auto items-center">{title && <p>{title}</p>}</div>
 
       <div className="flex">
-        <div className="flex mx-auto max-w-[50%] items-center space-x-2">
+        <div className="flex mx-auto sm:max-w-[95%] lg:max-w-[55%] items-center space-x-2">
           <Input
             id=""
             type="number"
@@ -200,7 +200,7 @@ export const InputEndereco: React.FC<{
   };
 
   return (
-    <div className="mx-auto mt-4   mb-6 max-w-[50%]">
+    <div className="mx-auto mt-4   mb-6 sm:max-w-[95%] lg:max-w-[55%]">
       {title && <p className="font-bold mb-2">{title}</p>}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-grow">
