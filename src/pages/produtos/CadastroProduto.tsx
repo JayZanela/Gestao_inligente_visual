@@ -390,8 +390,13 @@ export const CadastroProduto: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 p-4">
                     {enderecosSugestao.map((endereco, index) => (
                       <Card key={index} title="" description="">
-                        <div className="flex">
-                          <div>
+                        <div
+                          className="flex text-sm
+                sm:text-base 
+                md:text-lg    lg:text-xl    
+                xl:text-2xl"
+                        >
+                          <div className="flex-grow flex-shrink">
                             <p className="font-bold">
                               {
                                 endereco
@@ -403,10 +408,10 @@ export const CadastroProduto: React.FC = () => {
                               Saldo atual: {endereco.quantidade}
                             </p>
                           </div>
-                          <div className="flex text-center mx-auto">
+                          <div className="flex-grow flex-shrink text-center mx-auto">
                             <Button
                               variant="link"
-                              className="border-2"
+                              className="border-2 flex-grow flex-shrink"
                               onClick={() => {
                                 acessarEntradaForm(endereco);
                               }}
