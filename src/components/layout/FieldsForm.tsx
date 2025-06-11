@@ -101,7 +101,7 @@ export const InputSelect: React.FC<{
       {title && <p>{title}</p>}
       <select
         onChange={handleChange}
-        className="p-3 m-2 w-full border-2 border-gray-300 rounded"
+        className="pt-3 pb-3 w-full border-2 border-gray-300 rounded"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

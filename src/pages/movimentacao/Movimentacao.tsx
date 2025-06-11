@@ -143,15 +143,16 @@ export const Movimentos: React.FC = () => {
                   className="text-lg"
                 />
               </div>
-
-              <Button
-                variant="primary"
-                onClick={() => {
-                  handleBiparEndereco(endereco);
-                }}
-              >
-                Confirmar
-              </Button>
+              <div className="flex items-center">
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    handleBiparEndereco(endereco);
+                  }}
+                >
+                  Confirmar
+                </Button>
+              </div>
             </div>
 
             {enderecoError !== "" && (

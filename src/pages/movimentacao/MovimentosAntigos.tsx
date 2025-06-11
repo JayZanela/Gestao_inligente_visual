@@ -125,19 +125,7 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({
                   </div>
                 </div>
                 <div className="grid sm:grid-cols-1 lg:grid-cols-2">
-                  <div className="ml-5">
-                    <div>
-                      <p> Quantidade: {card.quantidade}</p>
-                    </div>
-                    <div>
-                      <p>
-                        {" "}
-                        Data do movimento:{" "}
-                        {format(card.dataMovi, "dd/MM/yyyy HH:mm")}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="ml-5 w-[40%]">
+                  <div className="text-center sm:m-1 lg:ml-5">
                     <div>
                       {card.tipo === "Entrada"
                         ? "Entrada para"
@@ -151,6 +139,18 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({
                         : card.tipo === "Saída"
                         ? `${card.endereco_de}`
                         : `${card.endereco_de} --> ${card.endereco_para}`}
+                    </div>
+                  </div>
+                  <div className="sm:m-1 lg:ml-5 w-[100%]">
+                    <div>
+                      <p> Quantidade: {card.quantidade}</p>
+                    </div>
+                    <div>
+                      <p>
+                        {" "}
+                        Data do movimento:{" "}
+                        {format(card.dataMovi, "dd/MM/yyyy HH:mm")}
+                      </p>
                     </div>
                   </div>
                 </div>

@@ -389,12 +389,13 @@ export const CadastroProduto: React.FC = () => {
                 {enderecosSugestao.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 sm:gap-4 lg:gap-4 sm:p-5 lg:p-4">
                     {enderecosSugestao.map((endereco, index) => (
-                      <Card key={index} title="" description="">
+                      <Card key={index} title="" description="" className="m-1">
                         <div
                           className="flex text-sm
                 sm:text-base 
                 md:text-lg    lg:text-xl    
-                xl:text-2xl"
+                xl:text-2xl
+                "
                         >
                           <div className="flex-grow flex-shrink">
                             <p className="font-bold">

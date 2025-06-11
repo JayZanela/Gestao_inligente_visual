@@ -12,7 +12,7 @@ export const Produtos: React.FC = () => {
     <div className=" mx-auto">
       <h1 className="text-2xl font-bold mb-6">Produtos</h1>
 
-      <div className="bg-white rounded-lg shadow-md mb-8">
+      <div className="bg-white rounded-lg shadow-md p-4 mb-8">
         <div className="flex flex-wrap gap-4 mb-6">
           <Button
             variant={activeTab === "cadastro" ? "primary" : "outline"}
