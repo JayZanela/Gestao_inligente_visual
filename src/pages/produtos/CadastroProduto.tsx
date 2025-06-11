@@ -323,7 +323,7 @@ export const CadastroProduto: React.FC = () => {
               ) : (
                 <div>
                   <h2 className="font-semibold text-center">
-                    Digite para Apresentar os resultados
+                    Pesquise o produto
                   </h2>
                 </div>
               )}
@@ -385,19 +385,19 @@ export const CadastroProduto: React.FC = () => {
                   </Button>
                 </div>
                 {enderecosSugestao.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 p-4">
                     {enderecosSugestao.map((endereco, index) => (
                       <Card key={index} title="" description="">
                         <div className="flex">
                           <div>
-                            <p className="text-3xl font-bold">
+                            <p className="font-bold">
                               {
                                 endereco
                                   .posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
                                   .endereco
                               }
                             </p>
-                            <p className="font-semibold">
+                            <p className="">
                               Saldo atual: {endereco.quantidade}
                             </p>
                           </div>

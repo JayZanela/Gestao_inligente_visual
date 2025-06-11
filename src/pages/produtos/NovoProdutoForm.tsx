@@ -130,11 +130,11 @@ export const NovoProdutoForm: React.FC = () => {
       <div className="gap-6  max-w-[77%] mx-auto text-center">
         <h2 className="p-2 text-3xl font-semibold ">Cadastrar Novo Produto</h2>
         <InputTexto
-          title="Nome (Ex: Roda Dianteira)"
+          title="Nome"
           onChange={(v) => handleParamChange("nome", v)}
         />
         <InputTexto
-          title="Descrição (Ex: Roda Aro 20 Dianteira)"
+          title="Descrição"
           onChange={(v) => handleParamChange("descricao", v)}
         />
 
@@ -143,7 +143,7 @@ export const NovoProdutoForm: React.FC = () => {
             { label: "Selecione algum tipo de Embalagem", value: "0" },
             ...opcoesTipoEmbalagem,
           ]}
-          title="Tipo de Embalagem (Ex: uma caixa com 50 PACOTES de X parafusos )"
+          title="Tipo de Embalagem"
           onChange={(v) => handleParamChange("tipo_embalagem", v)}
         />
         <InputSelect
@@ -151,7 +151,7 @@ export const NovoProdutoForm: React.FC = () => {
             { label: "Selecione uma Unidade", value: "" },
             ...opcoesUnidadeMedida,
           ]}
-          title="Unidade de Medida (Ex: 50 UNIDADES -> UN de Pacotes de parafusos"
+          title="Unidade de Medida "
           onChange={(v) => handleParamChange("unidade_medida", v)}
         />
         <InputSelect
@@ -165,7 +165,7 @@ export const NovoProdutoForm: React.FC = () => {
           }}
         />
         <InputTexto
-          title="Codigo de Barras Importação (Caso exista um codigo recebido)"
+          title="Codigo de Barras Importação"
           onChange={(v) => handleParamChange("codigo_barras", v)}
         />
         <div className="pt-4">
