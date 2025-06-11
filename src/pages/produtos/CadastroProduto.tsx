@@ -42,6 +42,7 @@ export const CadastroProduto: React.FC = () => {
   const [telaEntradaForm, setTelaEntradaForm] = useState(false);
   const [enderecoSelecionado, setEnderecoSelecionado] =
     useState<Endereco>(null);
+  const [enderecoValido, setenderecoValido] = useState(false);
 
   const [tipoDoCadastro, setTipoDoCadastro] =
     useState<tiposCadastro>("Desconhecido");
@@ -50,6 +51,8 @@ export const CadastroProduto: React.FC = () => {
     { nome: "sku", ativo: false },
     { nome: "codigo_barras", ativo: false },
   ]);
+
+  const [enderecoinput, setenderecoinput] = useState("");
 
   //-----------------
   const toggleOpcaoPesquisa = (nomeSelecionado: string) => {
@@ -141,11 +144,11 @@ export const CadastroProduto: React.FC = () => {
   };
 
   //------------------
-  const definirEndereco = (novoEndereco: string) => {
+  const definirEndereco = (novoEndereco1: string) => {
     setEnderecoSelecionado({
       quantidade: 0,
       posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque: {
-        endereco: novoEndereco,
+        endereco: novoEndereco1,
       },
     });
   };
@@ -153,12 +156,7 @@ export const CadastroProduto: React.FC = () => {
   //-------------------
   const atualizarEndereco = (novoEndereco: any) => {
     console.log(novoEndereco);
-    setEnderecoSelecionado({
-      quantidade: 0,
-      posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque: {
-        endereco: novoEndereco,
-      },
-    });
+    setenderecoinput(novoEndereco);
   };
 
   //------------------
@@ -168,30 +166,36 @@ export const CadastroProduto: React.FC = () => {
         <Card title="" description="">
           <div className="text-center">
             <InputEndereco
-              key={
-                enderecoSelecionado
-                  ?.posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
-                  .endereco
-              }
               title="Bipar Endereço Destino *"
-              onChange={(valor) => atualizarEndereco(valor)}
-              enderecoParam={
-                enderecoSelecionado
-                  ?.posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
-                  ?.endereco
-                  ? enderecoSelecionado
-                      ?.posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
-                      ?.endereco
-                  : ""
-              }
+              onValueChange={atualizarEndereco}
+              isValid={setenderecoValido}
+              enderecoParam={enderecoinput ? enderecoinput : ""}
             />
-            <Button onClick={() => setEnderecoBipado(true)}>
+            <Button
+              onClick={() => {
+                setEnderecoBipado(true);
+                definirEndereco(enderecoinput);
+              }}
+            >
               Acessar entrada do Produto
             </Button>
           </div>
         </Card>
       </div>
     );
+  };
+
+  //-------------------
+  const handleResetar = () => {
+    setTipoDoCadastro("Desconhecido");
+    setProdutoSelecionado(null);
+    setisprodutoSelecionado(false);
+    setenderecosSugestao([]);
+    setEnderecoBipado(false);
+    setTelaEntradaForm(false);
+    setEnderecoSelecionado(null);
+    setenderecoinput("");
+    setenderecoValido(false);
   };
 
   //------------------
@@ -203,7 +207,7 @@ export const CadastroProduto: React.FC = () => {
   return (
     <div className="">
       {tipoDoCadastro !== "Desconhecido" && (
-        <div onClick={() => setTipoDoCadastro("Desconhecido")}>
+        <div onClick={handleResetar}>
           <Button variant="link">{"< voltar"}</Button>
         </div>
       )}
@@ -372,12 +376,10 @@ export const CadastroProduto: React.FC = () => {
               </div>
             )}
             {!telaEntradaForm && (
-              <div>
-                <div
-                  className="justify-items-end"
-                  onClick={() => setenderecosSugestao([])}
-                >
+              <div className="">
+                <div onClick={() => setenderecosSugestao([])}>
                   <Button
+                    className="fluid place-items-end"
                     variant="link"
                     disabled={enderecosSugestao.length === 0}
                   >

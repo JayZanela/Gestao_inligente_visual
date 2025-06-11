@@ -90,6 +90,7 @@ export const InputSelect: React.FC<{
   options: { label: string; value: string }[];
   onChange?: (valor: string) => void;
   title?: string;
+  output?: (retorno: string) => void;
 }> = ({ options, onChange, title }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange?.(event.target.value);
@@ -114,15 +115,20 @@ export const InputSelect: React.FC<{
 
 export const InputEndereco: React.FC<{
   enderecoParam?: string;
-  onChange?: (valor: string) => void;
+  onValueChange?: (valor: string) => void;
   detalhes?: (produtosList: any[]) => void;
   title?: string;
-}> = ({ enderecoParam = "", onChange, detalhes, title }) => {
+  isValid?: (retorno: boolean) => void;
+}> = ({ enderecoParam = "", onValueChange, detalhes, title, isValid }) => {
   const [endereco, setEndereco] = useState(enderecoParam);
   const [enderecoError, setEnderecoError] = useState("");
   const [enderecoSucesso, setEnderecoSucesso] = useState("");
 
   const regexEndereco = /^[A-Za-z0-9]{3,}-[A-Za-z0-9]{3,}-[A-Za-z0-9]{2,}$/;
+
+  useEffect(() => {
+    setEndereco(enderecoParam);
+  }, [enderecoParam]);
 
   const handleBiparEndereco = async (paramDigitado?: string) => {
     if (paramDigitado === "") {
@@ -151,8 +157,8 @@ export const InputEndereco: React.FC<{
       const produtosList = Array.isArray(produtosRaw?.[0])
         ? produtosRaw[0]
         : [];
-
       detalhes?.(produtosList);
+      onValueChange?.(paramDigitado);
 
       const opcoes = produtosList.map((p) => ({
         label: `${p.nome} - ${p.descricao} `,
@@ -167,8 +173,10 @@ export const InputEndereco: React.FC<{
   };
 
   const handleEnderecoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const v = e.target.value;
+
     setEnderecoError("");
-    onChange?.(e.target.value);
+    console.log("Houve definição de regra");
 
     if (e.target.value === "") {
       setEnderecoSucesso("");
@@ -182,10 +190,12 @@ export const InputEndereco: React.FC<{
       setEnderecoSucesso("Endereço válido!");
       handleBiparEndereco(e.target.value);
       setEndereco(e.target.value);
+      return;
     } else {
       setEndereco(e.target.value);
       setEnderecoSucesso("");
       setEnderecoError("Endereço inválido");
+      return;
     }
   };
 
@@ -195,7 +205,7 @@ export const InputEndereco: React.FC<{
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex-grow">
           <Input
-            id="teste"
+            id="inpoutEndereco"
             placeholder="Digite ou bipe o código do endereço"
             value={endereco}
             onChange={handleEnderecoChange}

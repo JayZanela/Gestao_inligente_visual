@@ -155,7 +155,7 @@ export const NovoProdutoForm: React.FC = () => {
           onChange={(v) => handleParamChange("unidade_medida", v)}
         />
         <InputSelect
-          options={[{ label: "Selecione um Modelo", value: "" }]}
+          options={[{ label: "Selecione um Modelo", value: "0|0" }]}
           title="Modelo (Nome + Edição)"
           onChange={(v) => {
             // v === "Modelo X|1"
