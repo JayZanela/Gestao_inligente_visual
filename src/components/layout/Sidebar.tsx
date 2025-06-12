@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { menuConfig } from '../../config/formFields';
-import { 
-  Package, 
-  ShoppingCart, 
-  Calendar, 
-  ChevronDown, 
+import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { menuConfig } from "../../config/formFields";
+import {
+  Package,
+  ShoppingCart,
+  Calendar,
+  ChevronDown,
   X,
-    ChevronRight,
+  ChevronRight,
   ChevronLeft,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface SidebarProps {
   isMobile: boolean;
@@ -19,26 +19,28 @@ interface SidebarProps {
 
 const getIcon = (iconName: string) => {
   switch (iconName) {
-    case 'package':
+    case "package":
       return <Package />;
-    case 'shopping-cart':
+    case "shopping-cart":
       return <ShoppingCart />;
-    case 'calendar':
+    case "calendar":
       return <Calendar />;
     default:
       return <Package />;
   }
 };
 
-export const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen, toggleSidebar }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  isMobile,
+  isOpen,
+  toggleSidebar,
+}) => {
   const location = useLocation();
-  const [expandedItems, setExpandedItems] = useState<string[]>(['estoque']); // Inicialmente expande o menu de estoque
+  const [expandedItems, setExpandedItems] = useState<string[]>(["estoque"]); // Inicialmente expande o menu de estoque
 
   const toggleExpand = (id: string) => {
-    setExpandedItems(prev => 
-      prev.includes(id) 
-        ? prev.filter(item => item !== id) 
-        : [...prev, id]
+    setExpandedItems((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
@@ -55,30 +57,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen, toggleSideba
   }
 
   return (
-    <div className={`bg-gray-800 text-white ${isMobile ? 'fixed inset-0 z-50' : 'min-h-screen'} transition-all duration-300`}>
+    <div
+      className={`bg-gray-800 text-white ${
+        isMobile ? "fixed inset-0 z-50" : "min-h-screen"
+      } transition-all duration-300`}
+    >
       <div className="flex items-center justify-between p-4 border-b border-gray-700">
-  
-  <div className="flex items-center gap-2">
-    <h1 className="text-xl font-bold">Estoque Inteligente</h1>
-    <button onClick={toggleSidebar} className="text-white focus:outline-none">
-      {isOpen && <ChevronLeft size={20} />}
-    </button>
-  </div>
+        <div className="flex items-center gap-2">
+          <h1 className="text-xl font-bold">Estoque Inteligente</h1>
+          <button
+            onClick={toggleSidebar}
+            className="text-white focus:outline-none"
+          >
+            {isOpen && <ChevronLeft size={20} />}
+          </button>
+        </div>
 
-  {isMobile && (
-    <button onClick={toggleSidebar} className="text-white">
-      <X size={24} />
-    </button>
-  )}
-</div>
-      
+        {isMobile && (
+          <button onClick={toggleSidebar} className="text-white">
+            <X size={24} />
+          </button>
+        )}
+      </div>
+
       <nav className="p-4">
         <ul className="space-y-2">
           {menuConfig.map((item) => (
             <li key={item.id} className="mb-2">
-              <div 
+              <div
                 className={`flex items-center justify-between p-2 rounded-md cursor-pointer ${
-                  isMenuActive(item.id) ? 'bg-gray-700' : 'hover:bg-gray-700'
+                  isMenuActive(item.id) ? "bg-gray-700" : "hover:bg-gray-700"
                 }`}
                 onClick={() => toggleExpand(item.id)}
               >
@@ -86,9 +94,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen, toggleSideba
                   <span className="mr-2">{getIcon(item.icon)}</span>
                   <span>{item.title}</span>
                 </div>
-                {expandedItems.includes(item.id) ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+                {expandedItems.includes(item.id) ? (
+                  <ChevronDown size={18} />
+                ) : (
+                  <ChevronRight size={18} />
+                )}
               </div>
-              
+
               {expandedItems.includes(item.id) && item.subPages && (
                 <ul className="pl-6 mt-2 space-y-1">
                   {item.subPages.map((subPage) => (
@@ -96,7 +108,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen, toggleSideba
                       <Link
                         to={subPage.path}
                         className={`block p-2 rounded-md ${
-                          isActive(subPage.path) ? 'bg-primary text-white' : 'hover:bg-gray-700'
+                          isActive(subPage.path)
+                            ? "bg-primary text-white"
+                            : "hover:bg-gray-700"
                         }`}
                         onClick={isMobile ? toggleSidebar : undefined}
                       >
@@ -110,6 +124,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobile, isOpen, toggleSideba
           ))}
         </ul>
       </nav>
+      <nav className="p-2 min-h-screen">teste</nav>
+      <div>teste</div>
     </div>
   );
 };
