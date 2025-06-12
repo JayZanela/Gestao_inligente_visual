@@ -9,7 +9,6 @@ function App() {
   useEffect(() => {
     // Limpa tanto o localStorage quanto o sessionStorage
     localStorage.clear();
-    sessionStorage.clear();
     console.log("[App] storage limpo no carregamento");
   }, []);
 

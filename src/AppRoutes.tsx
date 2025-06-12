@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import Login from "./pages/Login";
 import Estoque from "./pages/Estoque";
@@ -29,14 +29,14 @@ const Agendamentos = () => (
 );
 
 // Componente de proteção de rota
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+const ProtectedRoute = () => {
   const isAuthenticated = localStorage.getItem("user") !== null;
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  return <>{children}</>;
+  return <Outlet />;
 };
 
 export const AppRoutes: React.FC = () => {
@@ -44,34 +44,29 @@ export const AppRoutes: React.FC = () => {
     <Routes>
       <Route path="/login" element={<Login />} />
 
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Navigate to="/estoque" replace />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Navigate to="/estoque" replace />} />
 
-        <Route path="estoque">
-          <Route index element={<Estoque />} />
-          <Route path="produtos">
-            <Route index element={<Produtos />} />
+          <Route path="estoque">
+            <Route index element={<Estoque />} />
+            <Route path="produtos">
+              <Route index element={<Produtos />} />
+            </Route>
+
+            <Route path="movimentacao" element={<Movimentos />} />
+            <Route path="enderecos" element={<Enderecos />} />
           </Route>
 
-          <Route path="movimentacao" element={<Movimentos />} />
-          <Route path="enderecos" element={<Enderecos />} />
-        </Route>
+          <Route path="pedidos">
+            <Route index element={<Pedidos />} />
+            <Route path="consulta" element={<Pedidos />} />
+          </Route>
 
-        <Route path="pedidos">
-          <Route index element={<Pedidos />} />
-          <Route path="consulta" element={<Pedidos />} />
-        </Route>
-
-        <Route path="agendamentos">
-          <Route index element={<Agendamentos />} />
-          <Route path="consulta" element={<Agendamentos />} />
+          <Route path="agendamentos">
+            <Route index element={<Agendamentos />} />
+            <Route path="consulta" element={<Agendamentos />} />
+          </Route>
         </Route>
       </Route>
 
