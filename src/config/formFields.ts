@@ -210,6 +210,7 @@ export const saidaFormFields: FieldConfig[] = [
 // Usuários autorizados para login (simulação de banco de dados)
 export const authorizedUsers = [
   'admin@estoque.com',
+  'sumareadmin@estoque.com',
   'usuario@estoque.com',
   'teste@estoque.com',
 ];

@@ -60,13 +60,12 @@ export const EntradaForm: React.FC<EntradaFormProps> = ({
         }`,
         value: String(produtoSelecionado.id),
       };
-
+      setProdutoId(novaOption.value);
+      console.log("logEffect", produtoSelecionado);
       setListaProdutos((prev) => {
         const jaExiste = prev.find((p) => p.value === novaOption.value);
         return jaExiste ? prev : [novaOption, ...prev];
       });
-
-      setProdutoId(novaOption.value);
     }
   }, [produtoSelecionado]);
 
@@ -168,7 +167,11 @@ export const EntradaForm: React.FC<EntradaFormProps> = ({
         <Modal
           isOpen={modalProduto}
           onClose={() => setModalProduto(false)}
-          onSelectProduto={setProdutoSelecionado}
+          onSelectProduto={(p) => {
+            console.log("[EntradaForm] onSelectProduto recebeu:", p);
+            setProdutoSelecionado(p);
+            setModalProduto(false);
+          }}
         />
       )}
 
@@ -187,11 +190,9 @@ export const EntradaForm: React.FC<EntradaFormProps> = ({
 
       <div className="gap-6  max-w-[77%] mx-auto">
         <InputSelect
-          options={[
-            { label: "Selecione um Produto", value: "" },
-            ...listaProdutos,
-          ]}
+          options={[...listaProdutos]}
           title="Produto *"
+          value={produtoId}
           onChange={(valor) => setProdutoId(valor)}
         />
         <a

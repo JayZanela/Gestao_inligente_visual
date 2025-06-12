@@ -90,8 +90,9 @@ export const InputSelect: React.FC<{
   options: { label: string; value: string }[];
   onChange?: (valor: string) => void;
   title?: string;
+  value?: string;
   output?: (retorno: string) => void;
-}> = ({ options, onChange, title }) => {
+}> = ({ options, onChange, title, value }) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange?.(event.target.value);
   };
@@ -102,6 +103,7 @@ export const InputSelect: React.FC<{
       <select
         onChange={handleChange}
         className="pt-3 pb-3 w-full border-2 border-gray-300 rounded"
+        value={value}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
