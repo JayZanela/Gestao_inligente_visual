@@ -124,8 +124,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           ))}
         </ul>
       </nav>
-      <nav className="p-2 min-h-screen">teste</nav>
-      <div>teste</div>
+      <div className="fixed bottom-1 left-3 w-full  p-2 ">
+        <div className="flex">
+          <p>Montadora: ? </p>
+        </div>
+      </div>
     </div>
   );
 };
