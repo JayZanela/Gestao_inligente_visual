@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "../../components/ui/Button";
 import { Search, PlusCircle } from "lucide-react";
 import CadastroProduto from "./CadastroProduto";
+import ConsultaProdutos from "./ConsultaProdutos";
 
 export const Produtos: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"consulta" | "cadastro">(
@@ -38,9 +39,7 @@ export const Produtos: React.FC = () => {
               Consulte os produtos cadastrados no sistema.
             </p>
             <div className="bg-gray-50 p-8 rounded-md text-center">
-              <p className="text-gray-500">
-                Funcionalidade de consulta em desenvolvimento.
-              </p>
+              <ConsultaProdutos />
             </div>
           </div>
         )}
