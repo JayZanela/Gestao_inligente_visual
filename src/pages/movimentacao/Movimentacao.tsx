@@ -89,6 +89,11 @@ export const Movimentos: React.FC = () => {
         setEnderecoError("Endereço não existe");
         setEnderecoSucesso("");
         return;
+      } else if (result.status === 406) {
+        setEnderecoError("");
+        setEnderecoSucesso("");
+        setTipoMovimento("entrada");
+        return;
       }
 
       const produtosRaw = result.produtos || [];

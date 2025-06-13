@@ -184,6 +184,9 @@ buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
     if (response.status === 415) {
       return { status: 415, error: 'Endereço não existente' };
     }
+    if (response.status === 406) {
+      return { status: 406, error: 'Endereço sem Ocupação' };
+    }
 
     if (!response.ok) {
       throw new Error('Erro ao buscar endereço');
