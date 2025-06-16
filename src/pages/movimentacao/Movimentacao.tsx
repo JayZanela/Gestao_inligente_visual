@@ -88,11 +88,15 @@ export const Movimentos: React.FC = () => {
       if (result.status === 415) {
         setEnderecoError("Endereço não existe");
         setEnderecoSucesso("");
+        setOpcoesMovimento("nenhum");
+        setProdutosOptions([{ label: "Busque um Produto", value: "0" }]);
         return;
       } else if (result.status === 406) {
         setEnderecoError("");
         setEnderecoSucesso("");
         setTipoMovimento("entrada");
+        setProdutosOptions([{ label: "Busque um Produto", value: "0" }]);
+        setOpcoesMovimento("entrada");
         return;
       }
 
