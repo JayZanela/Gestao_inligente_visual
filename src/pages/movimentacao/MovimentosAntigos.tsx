@@ -71,13 +71,11 @@ export const MovimentosAntigos: React.FC<paramMovimentosAntigoPrps> = ({
         endereco_de:
           movimento
             .ocupacoes_estoque_movimentacoes_ocupacao_origem_idToocupacoes_estoque
-            ?.posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
-            ?.endereco || "",
+            ?.posicoes_estoque?.endereco || "",
         endereco_para:
           movimento
             .ocupacoes_estoque_movimentacoes_ocupacao_destino_idToocupacoes_estoque
-            ?.posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
-            ?.endereco || "",
+            ?.posicoes_estoque?.endereco || "",
       }));
 
       if (paramBuscaEndereco) {

@@ -38,7 +38,7 @@ export const Produtos: React.FC = () => {
             <p className="text-gray-600 mb-4">
               Consulte os produtos cadastrados no sistema.
             </p>
-            <div className="bg-gray-50 p-8 rounded-md text-center">
+            <div className="bg-gray-50 p-2 rounded-md text-center">
               <ConsultaProdutos />
             </div>
           </div>
