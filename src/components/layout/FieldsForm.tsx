@@ -6,8 +6,18 @@ import { api } from "../../lib/api";
 export const InputTexto: React.FC<{
   onChange?: (valor: string) => void;
   title?: string;
-}> = ({ onChange, title }) => {
+  value?: string;
+  disabled?: boolean;
+}> = ({ onChange, disabled, title, value }) => {
   const [valor, setValor] = useState("");
+
+  useEffect(() => {
+    if (value) {
+      setValor(value);
+    }
+  }, [valor]);
+
+  const isDisabled = disabled ? disabled : false;
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const novoValor = event.target.value;
@@ -25,6 +35,7 @@ export const InputTexto: React.FC<{
           onChange={handleChange}
           className="text-center border border-gray-300 rounded"
           rows={2}
+          disabled={isDisabled}
         />
       </div>
     </div>

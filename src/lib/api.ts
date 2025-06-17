@@ -1,5 +1,7 @@
 // API client para comunicação com o backend
 
+import { json } from "stream/consumers";
+
 // URL base da API
 const urlAPI = "https://estoque-inteligente-pearl.vercel.app";
 
@@ -13,6 +15,24 @@ export interface ProdutoNovo {
   edicao_modelo: string;
   codigo_barras?: string;
 }
+
+interface ProdutoEditado { param:{
+  id?: number;
+  nome: string;
+  sku?: string;
+  descricao: string;
+  status?: string;
+  tipo_embalagem: string;
+  unidade_medida: string;
+  codigo_barras: string;
+  estoque_minimo: number;
+  estoque_maximo: number;
+  tempo_reposição: number;
+  ponto_reposicao: number;
+  categoria_id: number;
+  subCategoria_id: number;
+  imagem: BinaryType;
+}}
 
 export interface EntradaEstoque {
   param: {
@@ -91,6 +111,75 @@ export const api = {
       return data;
     } catch (error) {
       console.error('Erro ao inserir produto:', error);
+      throw error;
+    }
+  },
+    buscarCategorias: async () => {
+    try {
+      const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({function: "buscar_todas_categorias"}),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao buscar Categorias');
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Erro inesperado ao buscar Categorias:', error);
+      throw error;
+    }
+  },
+
+      buscarSubCategorias: async () => {
+    try {
+      const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({function: "buscar_todas_sub_categorias"}),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao buscar Categorias');
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Erro inesperado ao buscar Categorias:', error);
+      throw error;
+    }
+  },
+
+
+    inserirProdutoEditado: async (produto: ProdutoEditado) => {
+    try {
+      const response = await fetch(`${urlAPI}/api/estoque/inserirProdutoEditado`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(produto),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao Salvar Edição produto');
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Erro ao Editar Produto:', error);
       throw error;
     }
   },

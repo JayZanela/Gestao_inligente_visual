@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input } from "../../components/ui/Input";
 import { Card } from "../../components/ui/Card";
 import { api } from "../../lib/api";
@@ -12,6 +12,7 @@ import {
 } from "../../components/ui/table";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { Button } from "../../components/ui/Button";
+import EditarProdutoForm from "./EditarProdutoForm";
 
 interface detalhesLista {
   id_produto: number;
@@ -31,8 +32,48 @@ export const ConsultaProdutos: React.FC = () => {
   const [detalhesOpen, setdetalhesOpen] = useState(false);
   const [ModalQuestion, setModalQuestion] = useState(false);
   const [ProdutoEdicao, setProdutoEdicao] = useState(null);
+  const [ModalEdicao, setModalEdicao] = useState(false);
+  const [listaCategorias, setlistaCategorias] = useState(null);
+  const [listaSubCategorias, setlistaSubCategorias] = useState(null);
 
   const [desicaoClick, setdesicaoClick] = useState(null);
+
+  useEffect(() => {
+    const runAPIs = async () => {
+      try {
+        await pesquisaCategorias();
+        await pesquisaSubCategorias();
+      } catch (err) {
+        console.error(
+          "Erro inesperado ao buscar categorias/subcategorias:",
+          err
+        );
+      }
+    };
+
+    runAPIs();
+  }, []);
+
+  const pesquisaCategorias = async () => {
+    try {
+      const runBuscaCategorias = await api.buscarCategorias();
+      setlistaCategorias(runBuscaCategorias);
+      console.log("RUNBUSCA CATEGORIAS", runBuscaCategorias);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const pesquisaSubCategorias = async () => {
+    try {
+      const runBuscaSubCategorias = await api.buscarSubCategorias();
+      setlistaSubCategorias(runBuscaSubCategorias);
+      console.log("RUNBUSCASUBS", runBuscaSubCategorias);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const pesquisaTextoProduto = async (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -110,36 +151,61 @@ export const ConsultaProdutos: React.FC = () => {
   const ValidarDecisao: React.FC<{ produto: any; desicao: any }> = ({
     produto,
     desicao,
-  }) => (
-    <div className="fixed inset-0 z-40 flex justify-center items-start  bg-black bg-opacity-70 overflow-y-auto">
-      <div className="text-start bg-white mt-10  rounded-lg shadow-lg p-4 w-full max-w-3xl max-w-[100vh] overflow-y-auto">
-        <div>
-          <a
-            href=""
-            onClick={() => {
-              setModalQuestion(false);
-              setProdutoEdicao(null);
-              setdesicaoClick("");
-            }}
-          >
-            X
-          </a>
-        </div>
-        <div>
-          Deseja {desicao} o {produto.nome}? Se sim, prossiga clicando em{" "}
-          <a href="" className="text-green-700">
-            {" "}
-            <strong>aqui</strong>
-          </a>
+  }) => {
+    return (
+      <div className="fixed inset-0 z-40 flex justify-center items-start  bg-black bg-opacity-70 overflow-y-auto">
+        <div className="text-start bg-white mt-11 ml-1 mr-1  rounded-lg shadow-lg p-4 w-full max-w-[100vh] overflow-y-auto">
+          <div>
+            <Button
+              variant="link"
+              onClick={() => {
+                setModalQuestion(false);
+                setProdutoEdicao(null);
+                setdesicaoClick("");
+              }}
+            >
+              X
+            </Button>
+          </div>
+          <div>
+            Deseja {desicao} o {produto.nome}? Se sim, prossiga clicando em{" "}
+            <a
+              className="text-green-700"
+              onClick={() => {
+                setModalQuestion(false);
+                setModalEdicao(true);
+                setdesicaoClick("");
+              }}
+            >
+              {" "}
+              <strong>aqui</strong>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="items-center text-center">
       {ModalQuestion && (
         <ValidarDecisao produto={ProdutoEdicao} desicao={desicaoClick} />
+      )}
+
+      {ModalEdicao && (
+        <EditarProdutoForm
+          categorias={listaCategorias}
+          subCategorias={listaSubCategorias}
+          dadosProduto={ProdutoEdicao}
+          onClose={() => {
+            setProdutoEdicao(null);
+            setdesicaoClick(null);
+            setModalEdicao(false);
+          }}
+          onSave={() => {
+            return null;
+          }}
+        />
       )}
       <h2 className="m-4 text-2xl font-semibold">Buscar Produto no Sistema:</h2>
       <div className="items-center text-center">
@@ -165,7 +231,7 @@ export const ConsultaProdutos: React.FC = () => {
       </div>
       <div className="p-1 mx-auto">
         {inputPesquisa ? (
-          <Card title="" description="">
+          <div title="">
             <Table>
               <TableHeader>
                 <TableHead className="text-center"></TableHead>
@@ -227,26 +293,23 @@ export const ConsultaProdutos: React.FC = () => {
                           <TableCell align="left" colSpan={7}>
                             <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
                               {/* Coluna 1 */}
-                              <div className="space-y-1.5 ">
-                                <p>
-                                  <strong>ID:</strong> {produto.id}
-                                </p>
+                              <div className="space-y-1.5 sm:text-start lg:text-center">
                                 <p>
                                   <strong>Nome:</strong>{" "}
                                   {produto.nome ?? "Em Branco"}
+                                </p>
+                                <p>
+                                  <strong>SKU:</strong>{" "}
+                                  {produto.sku ?? "Em Branco"}
                                 </p>
                                 <p>
                                   <strong>Descrição:</strong>{" "}
                                   {produto.descricao ?? "Em Branco"}
                                 </p>
                                 <p>
-                                  <strong>SKU:</strong>{" "}
-                                  {produto.sku ?? "Em Branco"}
+                                  <strong>Código de Barras:</strong>{" "}
+                                  {produto.codigo_barras ?? "Em Branco"}
                                 </p>
-                              </div>
-
-                              {/* Coluna 2 */}
-                              <div className="space-y-1.0 mx-auto">
                                 <p>
                                   <strong>Embalagem:</strong>{" "}
                                   {produto.tipo_embalagem ?? "Em Branco"}
@@ -255,31 +318,50 @@ export const ConsultaProdutos: React.FC = () => {
                                   <strong>Unidade Medida:</strong>{" "}
                                   {produto.unidade_medida ?? "Em Branco"}
                                 </p>
+                              </div>
+
+                              {/* Coluna 2 */}
+                              <div className="space-y-1.5 mx-auto sm:text-start lg:text-center">
                                 <p>
-                                  <strong>Código de Barras:</strong>{" "}
-                                  {produto.codigo_barras ?? "Em Branco"}
+                                  <strong>Estoque Mínimo:</strong>{" "}
+                                  {produto.estoque_minimo ?? "Em Branco"}
                                 </p>
                                 <p>
-                                  <strong>Cadastrado em:</strong>{" "}
-                                  {produto.data_cadastro}
+                                  <strong>Estoque Máximo:</strong>{" "}
+                                  {produto.estoque_maximo ?? "Em Branco"}
+                                </p>
+                                <p>
+                                  <strong>Tempo Reposição:</strong>{" "}
+                                  {produto.tempo_reposicao ?? "Em Branco"}{" "}
+                                  {"dias"}
+                                </p>
+                                <p>
+                                  <strong>Ponto Reposição:</strong>{" "}
+                                  {produto.ponto_reposicao ?? "Em Branco"}
                                 </p>
                                 <p>
                                   <strong>Observações:</strong>{" "}
                                   {produto.observacoes ?? "Nenhuma"}
                                 </p>
+                                <p>
+                                  <strong>Cadastrado em:</strong>{" "}
+                                  {produto.data_cadastro}
+                                </p>
                               </div>
                             </div>
-                            <div className="gap-3">
-                              <Button
-                                variant="link"
-                                onClick={() => {
-                                  setModalQuestion(true);
-                                  setProdutoEdicao(produto);
-                                  setdesicaoClick("Editar");
-                                }}
-                              >
-                                Editar
-                              </Button>
+                            <div className="gap-3 flex lg:justify-center sm:justify-start">
+                              {["Editar", "Desativar"].map((acao) => (
+                                <Button
+                                  variant="link"
+                                  onClick={() => {
+                                    setModalQuestion(true);
+                                    setProdutoEdicao(produto);
+                                    setdesicaoClick(acao);
+                                  }}
+                                >
+                                  {acao}
+                                </Button>
+                              ))}
                             </div>
                           </TableCell>
                         </TableRow>
@@ -293,7 +375,7 @@ export const ConsultaProdutos: React.FC = () => {
                 )}
               </TableBody>
             </Table>
-          </Card>
+          </div>
         ) : (
           <div>
             <h2 className="font-semibold text-center">Pesquise o produto</h2>
