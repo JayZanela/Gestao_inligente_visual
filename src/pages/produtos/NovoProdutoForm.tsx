@@ -54,6 +54,7 @@ export const NovoProdutoForm: React.FC = () => {
     { label: "Zilla - V1", value: "Zilla|1" },
     { label: "Juna - V1", value: "Juna|1" },
     { label: "Mult - V1", value: "Mult|1" },
+    { label: "KAY - V2", value: "KAY|2" },
   ];
 
   const [isCarregandoTela, setisCarregandoTela] = useState(false);
@@ -71,6 +72,7 @@ export const NovoProdutoForm: React.FC = () => {
     codigo: "NP00",
     mensagem: "",
   });
+  const [formKey, setFormKey] = useState(0);
 
   // Função genérica para atualizar qualquer campo de `parametros`
   const handleParamChange = <K extends keyof parametrosAPINovoProduto>(
@@ -88,6 +90,7 @@ export const NovoProdutoForm: React.FC = () => {
     setisCarregandoTela(true);
     await APINovoProduto();
     setisCarregandoTela(false);
+    setFormKey((k) => k + 1);
   };
 
   const fecharMensagem = () => {
@@ -105,7 +108,6 @@ export const NovoProdutoForm: React.FC = () => {
         codigo: "NP01",
         mensagem: "Novo Produto Inserido no Sistema!",
       });
-
       setparametrosNovoProduto({
         nome: "",
         descricao: "",
@@ -126,7 +128,7 @@ export const NovoProdutoForm: React.FC = () => {
   };
 
   return (
-    <div>
+    <div key={formKey}>
       {isCarregandoTela && (
         <div
           className="
@@ -167,6 +169,7 @@ export const NovoProdutoForm: React.FC = () => {
         <h2 className="p-2 text-3xl font-semibold ">Cadastrar Novo Produto</h2>
         <InputTexto
           title="Nome"
+          value={parametrosNovoProduto.nome}
           onChange={(v) => handleParamChange("nome", v)}
         />
         <InputSelect
