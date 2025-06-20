@@ -289,6 +289,24 @@ buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
   }
 },
 
+buscaTodosEnderecos: async () => {
+  try {
+    const response = await fetch(`${urlAPI}/api/estoque/executar_buscas`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ function: 'busca_enderecos_completos' }
+      ),
+    })
+    return await response.json()
+  } catch (error) {
+          console.error('Erro ao buscar Endereços!:', error);
+      throw error;
+  }
+
+},
+
 
       buscarProdutosLike: async (pesquisaParam: pesquisaParam) => {
     try {
@@ -377,7 +395,11 @@ buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
 
     return null
 
-  }
+  },
+
+
+
+  
 };
 
 
