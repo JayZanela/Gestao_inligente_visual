@@ -3,7 +3,7 @@
 import { json } from "stream/consumers";
 
 // URL base da API
-const urlAPI = "https://estoque-inteligente-pearl.vercel.app";
+const urlAPI = "http://localhost:3000";
 
 // Interfaces para os tipos de dados
 export interface ProdutoNovo {
@@ -258,7 +258,7 @@ buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
   try {
     const isEnderecoVazio = !enderecoUnico || Object.values(enderecoUnico).every(value => !value);
 
-    const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
+    const response = await fetch(`${urlAPI}/api/estoque/executar_buscas`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -292,7 +292,7 @@ buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
 
       buscarProdutosLike: async (pesquisaParam: pesquisaParam) => {
     try {
-      const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
+      const response = await fetch(`${urlAPI}/api/estoque/executar_buscas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -318,7 +318,7 @@ buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
 
   buscarMovimentosLike: async (movimentacaoLikeParam: movimentacaoLikeParam) => {
     try {
-      const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
+      const response = await fetch(`${urlAPI}/api/estoque/executar_buscas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -346,7 +346,7 @@ buscarEnderecoUnico: async (enderecoUnico: EnderecoUnico) => {
 
   buscaOcupacoesDoProduto: async (produtoParam: buscaOcupacoesdoProdutoParam) => {
     try {
-      const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
+      const response = await fetch(`${urlAPI}/api/estoque/executar_buscas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

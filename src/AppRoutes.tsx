@@ -7,6 +7,7 @@ import Produtos from "./pages/produtos/Produtos";
 import Movimentos from "./pages/movimentacao/Movimentacao";
 import Enderecos from "./pages/enderecos/Enderecos";
 import CadastroProduto from "./pages/produtos/CadastroProduto";
+import { useAuth } from "./context/AuthContext";
 
 // Páginas em desenvolvimento (placeholders)
 
@@ -30,9 +31,9 @@ const Agendamentos = () => (
 
 // Componente de proteção de rota
 const ProtectedRoute = () => {
-  const isAuthenticated = localStorage.getItem("user") !== null;
+  const { user, token } = useAuth();
 
-  if (!isAuthenticated) {
+  if (!user || !token) {
     return <Navigate to="/login" replace />;
   }
 

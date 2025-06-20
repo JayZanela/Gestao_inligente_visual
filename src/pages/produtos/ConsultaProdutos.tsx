@@ -194,6 +194,7 @@ export const ConsultaProdutos: React.FC = () => {
 
       {ModalEdicao && (
         <EditarProdutoForm
+          listaSelect={[]}
           categorias={listaCategorias}
           subCategorias={listaSubCategorias}
           dadosProduto={ProdutoEdicao}

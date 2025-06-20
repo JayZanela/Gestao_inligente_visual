@@ -1,77 +1,69 @@
+// src/components/FetchInterceptor.tsx
 import { useGlobalParams } from "../../context/GlobalParamsContext";
 import { injectionRules } from "../../config/requestInjectionRules";
 import { useEffect } from "react";
 
 export default function FetchInterceptor() {
-  console.log("[Interceptor] montado");
-  const { params } = useGlobalParams();
-  console.log(params);
+  const { params } = useGlobalParams(); // pega montadora_id e outros parâmetros globais
 
   useEffect(() => {
     const originalFetch = window.fetch.bind(window);
 
-    window.fetch = async (resource, init: RequestInit = {}) => {
-      // Só mexe em JSON POSTs para a sua API
+    window.fetch = async (resource: RequestInfo, init: RequestInit = {}) => {
+      // 1) Busca o token do localStorage
+      const token = localStorage.getItem("authToken");
 
-      console.group(`[Interceptor] chamada fetch:`);
-      console.log(" resource:", resource);
-      console.log(" init:", init);
-      const isString = typeof resource === "string";
-      const isPost = init.method?.toUpperCase() === "POST";
-      let contentType: string | null = null;
-
-      // Detecta Content-Type seja string, Headers ou array tuple
-      if (init.headers instanceof Headers) {
-        contentType = init.headers.get("Content-Type");
-      } else if (Array.isArray(init.headers)) {
-        // [ ['Content-Type', 'application/json'], … ]
-        const ct = init.headers.find(
-          ([k]) => k.toLowerCase() === "content-type"
-        );
-        contentType = ct?.[1] ?? null;
-      } else if (typeof init.headers === "object" && init.headers !== null) {
-        contentType =
-          (init.headers as any)["Content-Type"] ??
-          (init.headers as any)["content-type"];
+      // 2) Normaliza headers
+      const headers = new Headers(init.headers || {});
+      if (token) {
+        headers.set("Authorization", `Bearer ${token}`);
+      }
+      // garante que JSON POSTs tenham Content-Type
+      if (
+        init.method?.toUpperCase() === "POST" &&
+        !headers.get("Content-Type")
+      ) {
+        headers.set("Content-Type", "application/json");
       }
 
-      if (isString && isPost && contentType === "application/json") {
-        let body: any = {};
-
+      // 3) Injeção de body para POST JSONs
+      let body = init.body;
+      const isPost = init.method?.toUpperCase() === "POST";
+      const contentType = headers.get("Content-Type");
+      if (isPost && contentType === "application/json") {
+        let parsed: Record<string, any> = {};
         try {
-          body = init.body ? JSON.parse(init.body as string) : {};
+          parsed = init.body ? JSON.parse(init.body as string) : {};
         } catch {
-          console.warn("[Interceptor] body não é JSON válido:", init.body);
-          body = {};
+          parsed = {};
         }
 
-        // Para cada regra configurada, injeta o param se a URL bater
-        console.log("chegou aqui");
+        // Para cada regra, injeta params[paramKey] no body quando a URL bater
         injectionRules.forEach((rule) => {
-          console.log("regra FOREACH", rule);
-          console.log(params[rule.paramKey] != null);
-          console.log(resource.includes(rule.match));
-          if (resource.includes(rule.match) && params[rule.paramKey] != null) {
-            body[rule.paramKey] = params[rule.paramKey];
-            console.log(
-              `[Interceptor] injetando ${rule.paramKey}=${
-                params[rule.paramKey]
-              } em ${resource}`
-            );
+          // params vem do seu contexto, carregado no componente
+          const val = (params as any)[rule.paramKey];
+          if (
+            typeof resource === "string" &&
+            resource.includes(rule.match) &&
+            val != null
+          ) {
+            parsed[rule.paramKey] = val;
           }
         });
 
-        init = {
-          ...init,
-          body: JSON.stringify(body),
-        };
+        body = JSON.stringify(parsed);
       }
-      console.log("retornando originalFecth", init, resource);
-      return originalFetch(resource, init);
+
+      // 4) Chama o fetch original com headers e body atualizados
+      return originalFetch(resource, {
+        ...init,
+        headers,
+        body,
+      });
     };
 
     return () => {
-      console.log(originalFetch);
+      // restaura fetch original ao desmontar
       window.fetch = originalFetch;
     };
   }, [params]);

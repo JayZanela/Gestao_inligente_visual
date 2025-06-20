@@ -2,38 +2,39 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
-import { authorizedUsers } from "../config/formFields";
+import { useAuth } from "../context/AuthContext";
 import { useGlobalParams } from "../context/GlobalParamsContext";
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
+  const [password, setPassword] = useState("");
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [name, setName] = useState("");
 
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login, register, isLoading, error } = useAuth();
+  const { setParam } = useGlobalParams();
 
-  const { params, setParam } = useGlobalParams();
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
 
-    // Simula verificação com o "banco de dados"
-    setTimeout(() => {
-      if (authorizedUsers.includes(email)) {
-        // Salva o usuário no localStorage para manter a sessão
-        localStorage.setItem("user", email);
-        if (email.includes("sumare")) {
-          setParam("montadora_id", 2);
-        } else {
-          setParam("montadora_id", 1);
-        }
-        navigate("/estoque");
+    let success = false;
+
+    if (isRegisterMode) {
+      success = await register(email, password, name);
+    } else {
+      success = await login(email, password);
+    }
+
+    if (success) {
+      // Configurar montadora baseado no email (mantendo a lógica existente)
+      if (email.includes("sumare")) {
+        setParam("montadora_id", 2);
       } else {
-        setError("E-mail não autorizado. Por favor, tente novamente.");
+        setParam("montadora_id", 1);
       }
-      setLoading(false);
-    }, 1000);
+      navigate("/estoque");
+    }
   };
 
   return (
@@ -44,7 +45,9 @@ export const Login: React.FC = () => {
             Estoque Inteligente
           </h1>
           <p className="mt-2 text-gray-600">
-            Faça login para acessar o sistema
+            {isRegisterMode
+              ? "Criar nova conta"
+              : "Faça login para acessar o sistema"}
           </p>
         </div>
 
@@ -55,6 +58,20 @@ export const Login: React.FC = () => {
         )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {isRegisterMode && (
+            <div>
+              <Input
+                id="name"
+                label="Nome"
+                type="text"
+                placeholder="Digite seu nome"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+          )}
+
           <div>
             <Input
               id="email"
@@ -67,16 +84,51 @@ export const Login: React.FC = () => {
             />
           </div>
 
-          <Button type="submit" variant="primary" fullWidth disabled={loading}>
-            {loading ? "Verificando..." : "Entrar"}
+          <div>
+            <Input
+              id="password"
+              label="Senha"
+              type="password"
+              placeholder="Digite sua senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <Button
+            type="submit"
+            variant="primary"
+            fullWidth
+            disabled={isLoading}
+          >
+            {isLoading
+              ? isRegisterMode
+                ? "Criando conta..."
+                : "Verificando..."
+              : isRegisterMode
+              ? "Criar conta"
+              : "Entrar"}
           </Button>
 
-          <div className="text-center text-sm text-gray-500">
-            <p>Use um dos e-mails autorizados para teste:</p>
-            <p className="font-medium">
-              admin@estoque.com, usuario@estoque.com, teste@estoque.com
-            </p>
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => setIsRegisterMode(!isRegisterMode)}
+              className="text-sm text-blue-600 hover:text-blue-500"
+            >
+              {isRegisterMode
+                ? "Já tem uma conta? Faça login"
+                : "Não tem uma conta? Registre-se"}
+            </button>
           </div>
+
+          {!isRegisterMode && (
+            <div className="text-center text-sm text-gray-500">
+              <p>Para teste, você pode criar uma nova conta ou usar:</p>
+              <p className="font-medium">admin@estoque.com / senha123</p>
+            </div>
+          )}
         </form>
       </div>
     </div>
