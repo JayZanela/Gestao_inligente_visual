@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [error, setError] = useState<string | null>(null);
 
   // URL base da API - ajuste conforme necessário
-  const API_BASE_URL = "http://localhost:3000";
+  const API_BASE_URL = "https://estoque-inteligente-pearl.vercel.app/";
 
   // Verificar se há token salvo no localStorage ao inicializar
   useEffect(() => {

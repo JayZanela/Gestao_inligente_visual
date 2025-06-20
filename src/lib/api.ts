@@ -3,7 +3,7 @@
 import { json } from "stream/consumers";
 
 // URL base da API
-const urlAPI = "http://localhost:3000";
+const urlAPI = "https://estoque-inteligente-pearl.vercel.app";
 
 // Interfaces para os tipos de dados
 export interface ProdutoNovo {
