@@ -78,7 +78,7 @@ export const Layout: React.FC = () => {
                 <Menu size={24} />
               </button>
             )}
-            <h1 className="text-lg font-medium">Estoque Inteligente</h1>
+            <h1 className="text-lg font-medium">Estoque</h1>
             <div className="flex items-center">
               <span className="text-sm text-gray-600">
                 {user?.name || user?.email}

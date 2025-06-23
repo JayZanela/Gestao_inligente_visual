@@ -51,6 +51,11 @@ export const EntradaForm: React.FC<EntradaFormProps> = ({
   useEffect(() => {
     setListaProdutos(produtosOptions);
   }, [produtosOptions]);
+
+  useEffect(() => {
+    if (produtoId || listaProdutos.length > 1) return;
+    setProdutoId(listaProdutos[0].value);
+  }, [produtoId]);
   // Preenche produto_id quando usuário seleciona via modal
   useEffect(() => {
     if (produtoSelecionado) {

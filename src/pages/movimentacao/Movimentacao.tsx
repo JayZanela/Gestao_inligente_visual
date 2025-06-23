@@ -7,12 +7,17 @@ import TransferenciaForm from "./TransferenciaForm";
 import MovimentosAntigos from "./MovimentosAntigos";
 import SaidaForm from "./SaidaForm";
 import { api } from "../../lib/api";
+import { useLocation } from "react-router-dom";
 
 type MovimentoTipo = "entrada" | "transferencia" | "saida" | "" | "todos";
 type movimentoOpcoes = "entrada" | "todos" | "nenhum";
 
 type produtosQuantificados = [{ id: number; quantidade: number }];
 export const Movimentos: React.FC = () => {
+  const location = useLocation();
+
+  // 2) Pega o id ou define string vazia
+
   const [tipoMovimento, setTipoMovimento] = useState<MovimentoTipo>("");
   const [valorDetalhes, setValorDetalhes] = useState<{ any }[]>([]);
   const [opcoesMovimento, setOpcoesMovimento] =
@@ -25,6 +30,17 @@ export const Movimentos: React.FC = () => {
   >([]);
   const [listaQuantidades, setListaQuantidades] =
     useState<produtosQuantificados>(null);
+
+  const endereoStateLink = location.state?.idEndereco ?? endereco;
+  React.useEffect(() => {
+    if (!endereoStateLink && !endereco) return;
+
+    const runHandle = async () => {
+      await handleBiparEndereco(endereoStateLink);
+    };
+    runHandle();
+    setEndereco(endereoStateLink);
+  }, [endereco]);
 
   React.useEffect(() => {
     if (valorDetalhes) {

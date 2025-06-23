@@ -189,6 +189,7 @@ export const InputEndereco: React.FC<{
     const v = e.target.value;
 
     setEnderecoError("");
+    onValueChange?.(v);
     console.log("Houve definição de regra");
 
     if (e.target.value === "") {

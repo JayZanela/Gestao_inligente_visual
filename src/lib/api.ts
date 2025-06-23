@@ -116,7 +116,7 @@ export const api = {
   },
     buscarCategorias: async () => {
     try {
-      const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
+      const response = await fetch(`${urlAPI}/api/estoque/executar_buscas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ export const api = {
 
       buscarSubCategorias: async () => {
     try {
-      const response = await fetch(`${urlAPI}/api/estoque/executar_busca`, {
+      const response = await fetch(`${urlAPI}/api/estoque/executar_buscas`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

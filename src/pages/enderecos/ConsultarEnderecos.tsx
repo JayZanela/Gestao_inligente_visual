@@ -10,18 +10,33 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { ArrowDown, ArrowUp, Divide } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import EditarProdutoForm from "../produtos/EditarProdutoForm";
 import { InputEndereco } from "@/components/layout/FieldsForm";
 import { run } from "node:test";
+import { useNavigate } from "react-router-dom";
 
+interface OcupacaoDetalhada {
+  ocupacao: {
+    quantidade: number;
+    // … outros campos que vêm em ocupacao …
+  };
+  runBuscaProdutoUnico: {
+    nome: string;
+    sku: string;
+    // … outros campos que vêm em runBuscaProdutoUnico …
+  };
+}
 interface detalhesLista {
   id_endereco: number;
   isOpen: boolean;
+  ocupacoes: OcupacaoDetalhada[];
 }
 
 export const ConsultaEndereco: React.FC = () => {
+  const navigate = useNavigate();
+
   const [opcoesPesquisa, setOpcoesPesquisa] = useState([
     { nome: "nome", ativo: true },
     { nome: "sku", ativo: false },
@@ -30,7 +45,8 @@ export const ConsultaEndereco: React.FC = () => {
   ]);
   const [produtosPesquisados, setProdutosPesquisados] = useState([]);
   const [inputPesquisa, setInputPesquisa] = useState("");
-  const [listaDetalhes, setListaDetalhes] = useState<detalhesLista[]>(null);
+  const [listaDetalhes, setListaDetalhes] = useState<detalhesLista[]>([]);
+  const [listaFiltrada, setlistaFiltrada] = useState([]);
   const [detalhesOpen, setdetalhesOpen] = useState(false);
   const [ModalQuestion, setModalQuestion] = useState(false);
   const [ProdutoEdicao, setProdutoEdicao] = useState(null);
@@ -55,19 +71,25 @@ export const ConsultaEndereco: React.FC = () => {
     runAPI();
   }, [listaEnderecos]);
 
-  const filtrarEnderecos = () => {
-    return listaEnderecos.filter((e) => e);
+  const filtrarEnderecos = (param: string) => {
+    console.log("LOG FDILTRO", param);
+    const filtro = listaEnderecos.filter((e) =>
+      e.endereco.endereco.includes(param)
+    );
+    return setlistaFiltrada(filtro);
   };
 
   const buscarEnderecos = async () => {
     try {
       const runBuscaEnderecos = await api.buscaTodosEnderecos();
       setlistaEnderecos(runBuscaEnderecos.enderecosDetalhados);
+      setlistaFiltrada(runBuscaEnderecos.enderecosDetalhados);
       console.log(`LOG ARRAY`, runBuscaEnderecos.enderecosDetalhados);
       const novosDetalhes = runBuscaEnderecos.enderecosDetalhados.map(
         (endereco) => ({
           id_endereco: endereco.endereco.id,
           isOpen: false,
+          ocupacoes: endereco.produtos || [],
         })
       );
       setListaDetalhes(novosDetalhes);
@@ -100,6 +122,7 @@ export const ConsultaEndereco: React.FC = () => {
   const atualizarEndereco = (novoEndereco: any) => {
     console.log(novoEndereco);
     setvalorEndreco(novoEndereco);
+    filtrarEnderecos(novoEndereco);
   };
 
   const abrirDetalhes = (index: number) => {
@@ -159,44 +182,6 @@ export const ConsultaEndereco: React.FC = () => {
     );
   };
 
-  const ValidarDecisao: React.FC<{ produto: any; desicao: any }> = ({
-    produto,
-    desicao,
-  }) => {
-    return (
-      <div className="fixed inset-0 z-40 flex justify-center items-start  bg-black bg-opacity-70 overflow-y-auto">
-        <div className="text-start bg-white mt-11 ml-1 mr-1  rounded-lg shadow-lg p-4 w-full max-w-[100vh] overflow-y-auto">
-          <div>
-            <Button
-              variant="link"
-              onClick={() => {
-                setModalQuestion(false);
-                setProdutoEdicao(null);
-                setdesicaoClick("");
-              }}
-            >
-              X
-            </Button>
-          </div>
-          <div>
-            Deseja {desicao} o {produto.nome}? Se sim, prossiga clicando em{" "}
-            <a
-              className="text-green-700"
-              onClick={() => {
-                setModalQuestion(false);
-                setModalEdicao(true);
-                setdesicaoClick("");
-              }}
-            >
-              {" "}
-              <strong>aqui</strong>
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const BipadorEndereco = () => {
     return (
       <div>
@@ -207,7 +192,9 @@ export const ConsultaEndereco: React.FC = () => {
               onValueChange={atualizarEndereco}
               enderecoParam={valorEndreco ? valorEndreco : ""}
             />
-            <Button>Filtrar</Button>
+            <Button onClick={() => atualizarEndereco(valorEndreco)}>
+              Filtrar
+            </Button>
           </div>
         </Card>
       </div>
@@ -232,16 +219,14 @@ export const ConsultaEndereco: React.FC = () => {
               <p>Carregando Endereços...</p>
             </div>
           )}
-          {listaEnderecos.map((endereco, index) => (
-            <React.Fragment key={index}>
-              <div className="w-100%">
-                {/* Ponto de ancoragem do card */}
-                <div className="flex justify-center cursor-pointer"> </div>
 
+          <div className=" max-h-[80vh] overflow-y-auto">
+            {listaFiltrada.map((endereco) => (
+              <div className="w-100%" key={endereco.endereco.id}>
+                {/* Ponto de ancoragem do card */}
                 {/* Card suspenso */}
                 <Card
                   description=""
-                  key={index}
                   title=""
                   className="
                 flex-grow
@@ -263,17 +248,18 @@ export const ConsultaEndereco: React.FC = () => {
                 >
                   <div>
                     {/* conteúdo do card */}
-                    <div
-                      key={index}
-                      className="flex"
-                      onClick={() => abrirDetalhes(endereco.endereco.id)}
-                    >
-                      {(() => {
-                        const detalhe = listaDetalhes.find(
-                          (d) => d.id_endereco === endereco.endereco.id
-                        );
-                        return detalhe?.isOpen ? <ArrowUp /> : <ArrowDown />;
-                      })()}
+                    <div key={endereco.endereco.id} className="flex">
+                      <Button
+                        variant="link"
+                        onClick={() => abrirDetalhes(endereco.endereco.id)}
+                      >
+                        {(() => {
+                          const detalhe = listaDetalhes.find(
+                            (d) => d.id_endereco === endereco.endereco.id
+                          );
+                          return detalhe?.isOpen ? <ArrowUp /> : <ArrowDown />;
+                        })()}
+                      </Button>
                     </div>
                     <div className="flex">
                       <div className="font-semibold text-lg">
@@ -297,34 +283,65 @@ export const ConsultaEndereco: React.FC = () => {
                   </div>
                 </Card>
                 {(() => {
+                  // 1. Encontra o detalhe correspondente
                   const detalhe = listaDetalhes.find(
                     (d) => d.id_endereco === endereco.endereco.id
                   );
-                  return detalhe?.isOpen ? (
+                  // 2. Renderiza só se existir e estiver aberto
+                  return detalhe && detalhe.isOpen ? (
                     <Card
-                      description=""
-                      key={index}
+                      key={detalhe.id_endereco}
                       title=""
+                      description=""
                       className="
-                flex-grow
-       text-start
-      ml-5 
-      mt-2 
-      w-90% 
-      bg-white 
-      shadow-lg 
-      rounded-lg 
-      p-4
-    "
+        flex-grow text-start ml-5 mt-2 w-[90%]
+        bg-white shadow-lg rounded-lg p-4
+      "
                     >
                       {" "}
-                      tete
+                      {detalhe.ocupacoes.length === 0 && (
+                        <div className="font-semibold text-center">
+                          <p>Sem Produtos</p>
+                        </div>
+                      )}
+                      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 mx-auto">
+                        {detalhe.ocupacoes.map((ocup) => (
+                          <div className="p-2">
+                            <Card title="" description="">
+                              <div>
+                                <p className="font-semibold">
+                                  {ocup.runBuscaProdutoUnico.nome} -{" "}
+                                  {ocup.runBuscaProdutoUnico.sku}
+                                </p>
+                                <div className="flex">
+                                  <p>Saldo:</p>
+                                  <p className="ml-1">
+                                    {ocup.ocupacao.quantidade}
+                                  </p>
+                                </div>
+                              </div>
+                            </Card>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex justify-center">
+                        <Button
+                          variant="link"
+                          onClick={() =>
+                            navigate("/estoque/movimentacao", {
+                              state: { idEndereco: endereco.endereco.endereco },
+                            })
+                          }
+                        >
+                          Ação
+                        </Button>
+                      </div>
                     </Card>
                   ) : null;
                 })()}
               </div>
-            </React.Fragment>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

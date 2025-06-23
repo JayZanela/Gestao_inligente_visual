@@ -64,7 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     >
       <div className="flex items-center justify-between p-4 border-b border-gray-700">
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold">Estoque Inteligente</h1>
+          <h1 className="text-xl font-bold">Estoque </h1>
           <button
             onClick={toggleSidebar}
             className="text-white focus:outline-none"

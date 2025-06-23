@@ -21,12 +21,13 @@ type tiposCadastro = "Desconhecido" | "Novo" | "Existente";
 export const CadastroProduto: React.FC = () => {
   type Endereco = {
     quantidade: number;
-    posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque: {
+    posicoes_estoque: {
       endereco: string;
     };
   };
 
   type Produto = {
+    id: number;
     nome: string;
     descricao: string;
     tipo_embalagem: string;
@@ -147,7 +148,7 @@ export const CadastroProduto: React.FC = () => {
   const definirEndereco = (novoEndereco1: string) => {
     setEnderecoSelecionado({
       quantidade: 0,
-      posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque: {
+      posicoes_estoque: {
         endereco: novoEndereco1,
       },
     });
@@ -344,31 +345,19 @@ export const CadastroProduto: React.FC = () => {
                 <div className="m-1 text-1xl font-semibold">
                   <p className="text-2xl">Endereço:</p>
                   <p className="text-3xl">
-                    {
-                      enderecoSelecionado
-                        .posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
-                        .endereco
-                    }
+                    {enderecoSelecionado.posicoes_estoque.endereco}
                   </p>
-                  <p className="">
-                    Saldo: {enderecoSelecionado.quantidade}{" "}
-                    {produtoSelecionado.tipo_embalagem} (s)
-                  </p>
+                  <p className="">Saldo: {enderecoSelecionado.quantidade} </p>
                 </div>
 
                 <EntradaForm
                   enderecoPreenchido={
-                    enderecoSelecionado
-                      .posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
-                      .endereco
+                    enderecoSelecionado.posicoes_estoque.endereco
                   }
                   produtosOptions={[
                     {
-                      label:
-                        String(produtoSelecionado.nome) +
-                        " - " +
-                        String(produtoSelecionado.descricao),
-                      value: "1",
+                      label: String(produtoSelecionado.nome),
+                      value: String(produtoSelecionado.id),
                     },
                   ]}
                   motivosOptions={[]}
@@ -399,11 +388,7 @@ export const CadastroProduto: React.FC = () => {
                         >
                           <div className="flex-grow flex-shrink">
                             <p className="font-bold">
-                              {
-                                endereco
-                                  .posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
-                                  .endereco
-                              }
+                              {endereco.posicoes_estoque.endereco}
                             </p>
                             <p className="">
                               Saldo atual: {endereco.quantidade}
@@ -433,17 +418,12 @@ export const CadastroProduto: React.FC = () => {
                   <div className="text-center">
                     <EntradaForm
                       enderecoPreenchido={
-                        enderecoSelecionado
-                          .posicoes_estoque_ocupacoes_estoque_posicao_idToposicoes_estoque
-                          .endereco
+                        enderecoSelecionado.posicoes_estoque.endereco
                       }
                       produtosOptions={[
                         {
-                          label:
-                            String(produtoSelecionado.nome) +
-                            " - " +
-                            String(produtoSelecionado.descricao),
-                          value: "1",
+                          label: String(produtoSelecionado.nome),
+                          value: String(produtoSelecionado.id),
                         },
                       ]}
                       motivosOptions={[]}
